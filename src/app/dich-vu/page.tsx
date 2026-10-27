@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { Breadcrumb, ServiceCards, CTA, SectionHeading } from "@/components/Sections";
+import { services } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
+export const metadata=pageMetadata("Dịch vụ nâng cấp và độ xe", "Tư vấn concept, nội thất, ngoại thất, body kit, mâm lốp, ánh sáng, tiện nghi và phụ kiện ô tô theo nhu cầu.","/dich-vu");
+export default function ServicesPage(){return <><div className="container page-wrap"><Breadcrumb items={[{label:"Dịch vụ"}]}/><header className="page-intro"><div className="eyebrow"><span className="eyebrow-line"/>OUR SERVICES</div><h1>Mỗi nâng cấp<br/><span>bắt đầu từ nhu cầu.</span></h1><p>Tìm hiểu các nhóm dịch vụ và gửi thông tin dòng xe để xác nhận hạng mục tương thích, phương án thi công và báo giá.</p></header><ServiceCards/><div className="detail-bottom-links">{services.map((s)=><Link key={s.slug} href={`/dich-vu/${s.slug}`}>{s.title} ↗</Link>)}</div><section className="page-note"><SectionHeading kicker="CLEAR BEFORE INSTALL" title="Thông tin được xác nhận theo từng cấu hình." text="Giá, thời gian, phụ kiện tương thích và điều kiện bảo hành thay đổi theo xe và hạng mục. Các thông tin này được thống nhất trước khi thi công."/></section></div><CTA/></>;}

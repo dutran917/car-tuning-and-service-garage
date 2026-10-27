@@ -1,0 +1,5 @@
+import type { MetadataRoute } from "next";
+import { services, site } from "@/lib/site";
+import { getManagedArticles, getManagedPackages } from "@/lib/managed-content";
+export const dynamic = "force-dynamic";
+export default async function sitemap():Promise<MetadataRoute.Sitemap>{const now=new Date();const [managedPackages,managedArticles]=await Promise.all([getManagedPackages(),getManagedArticles()]);const fixed=["/","/goi-do","/dich-vu","/du-an","/gioi-thieu","/kien-thuc","/lien-he","/quyen-rieng-tu"];return [...fixed.map(path=>({url:`${site.url}${path}`,lastModified:now,changeFrequency:path==="/"?"weekly" as const:"monthly" as const,priority:path==="/"?1:0.7})),...managedPackages.map(p=>({url:`${site.url}/goi-do/${p.slug}`,lastModified:now,changeFrequency:"monthly" as const,priority:0.7})),...services.map(s=>({url:`${site.url}/dich-vu/${s.slug}`,lastModified:now,changeFrequency:"monthly" as const,priority:0.7})),...managedArticles.map(a=>({url:`${site.url}/kien-thuc/${a.slug}`,lastModified:new Date(`${a.date}T00:00:00+07:00`),changeFrequency:"monthly" as const,priority:0.6}))];}

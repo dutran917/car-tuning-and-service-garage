@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+prisma/dev.db
+src/generated/prisma
+/public/uploads/

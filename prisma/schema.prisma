@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  APPOINTMENT
+  QUOTED
+  WON
+  LOST
+}
+
+enum OrderStatus {
+  OPEN
+  WON
+  CANCELLED
+  REFUNDED
+}
+
+model Lead {
+  id               String        @id @default(cuid())
+  idempotencyKey   String?       @unique
+  name             String
+  phone            String
+  vehicle          String
+  upgrades         String[]
+  budget           String
+  notes            String
+  timing           String
+  preferredContact String
+  packageSlug      String?
+  status           LeadStatus    @default(NEW)
+  attribution      Attribution?
+  appointments     Appointment[]
+  quotations       Quotation[]
+  orders           Order[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model Attribution {
+  id                 String   @id @default(cuid())
+  leadId             String   @unique
+  lead               Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  firstTouch         Json
+  lastNonDirectTouch Json
+  sessionTouch       Json
+  analyticsConsent   Boolean  @default(false)
+  advertisingConsent Boolean  @default(false)
+  capturedAt         DateTime @default(now())
+
+  @@index([capturedAt])
+}
+
+model Appointment {
+  id          String    @id @default(cuid())
+  leadId      String
+  lead        Lead      @relation(fields: [leadId], references: [id])
+  status      String    @default("BOOKED")
+  scheduledAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([leadId, createdAt])
+}
+
+model Quotation {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  amount    Decimal? @db.Decimal(14, 2)
+  status    String   @default("DRAFT")
+  createdAt DateTime @default(now())
+
+  @@index([leadId, createdAt])
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  leadId           String
+  lead             Lead        @relation(fields: [leadId], references: [id])
+  status           OrderStatus @default(OPEN)
+  bookedRevenue    Decimal?    @db.Decimal(14, 2)
+  collectedRevenue Decimal     @default(0) @db.Decimal(14, 2)
+  directCost       Decimal?    @db.Decimal(14, 2)
+  refundedAmount   Decimal     @default(0) @db.Decimal(14, 2)
+  wonAt            DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([status, wonAt])
+}
+
+model MarketingCost {
+  id          String   @id @default(cuid())
+  platform    String
+  campaign    String?
+  periodStart DateTime
+  periodEnd   DateTime
+  amount      Decimal  @db.Decimal(14, 2)
+  currency    String   @default("VND")
+  createdAt   DateTime @default(now())
+
+  @@index([platform, periodStart, periodEnd])
+}
+
+model EventOutbox {
+  id             String   @id @default(cuid())
+  eventName      String
+  entityType     String
+  entityId       String
+  destination    String
+  payload        Json
+  idempotencyKey String   @unique
+  status         String   @default("PENDING")
+  attempts       Int      @default(0)
+  nextAttemptAt  DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@index([status, nextAttemptAt])
+}
+
+model ManagedPackage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  vehicle   String
+  style     String
+  budget    String
+  range     String
+  text      String
+  items     Json
+  imageUrl  String?
+  images    Json     @default("[]")
+  videos    Json     @default("[]")
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model ContentRedirect {
+  fromPath String   @id
+  toPath   String
+  createdAt DateTime @default(now())
+}
+
+model ManagedArticle {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String
+  date      String
+  intro     String
+  body      Json
+  related   String
+  images    Json
+  videos    Json     @default("[]")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, date])
+}
