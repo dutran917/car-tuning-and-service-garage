@@ -6,4 +6,22 @@
 .admin-row-actions a{color:#d1d4d0;text-decoration:none;border:1px solid #414744;padding:9px 12px;font-size:11px}
 .admin-list-add{display:flex;justify-content:flex-end;margin-top:16px}
 .admin-shortcuts{display:flex;justify-content:flex-end;gap:10px;margin:0 0 18px}
+.article-admin-image-fields .admin-image-cover{justify-self:start;border:1px solid #4a504b;background:transparent;color:#d1d4d0;padding:8px 11px;cursor:pointer;font-size:11px}
+.article-admin-image-fields .admin-image-cover[aria-pressed="true"]{border-color:#f26a32;color:#ffb28e;background:#f26a3218}
+.image-crop-trigger{width:max-content;margin-top:0}
+.image-crop-backdrop{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.82)}
+.image-crop-dialog{width:min(900px,100%);max-height:calc(100dvh - 40px);overflow:auto;border:1px solid #414744;background:#171919;padding:22px;box-shadow:0 20px 80px #000c}
+.image-crop-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}
+.image-crop-header .eyebrow{color:#f26a32;font:10px var(--mono);letter-spacing:1.5px}
+.image-crop-header h2{margin:7px 0 0;color:#f0f0ed;font-size:21px}
+.image-crop-close{border:0;background:none;color:#d1d4d0;font-size:30px;line-height:1;cursor:pointer}
+.image-crop-stage{position:relative;width:100%;overflow:hidden;background:#090a0a;touch-action:none;cursor:grab;user-select:none}
+.image-crop-stage:active{cursor:grabbing}
+.image-crop-stage>img{position:absolute;max-width:none;pointer-events:none}
+.image-crop-frame{position:absolute;inset:0;border:1px solid #fff9;box-shadow:0 0 0 999px #0005;pointer-events:none}
+.image-crop-controls{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:16px;color:#a8ada7;font-size:12px}
+.image-crop-controls label{display:flex;flex:1;align-items:center;gap:12px;min-width:0;white-space:nowrap}
+.image-crop-controls input{flex:1;width:auto;min-width:50px;accent-color:#f26a32}
+.image-crop-dialog footer{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.image-crop-error{color:#ff9a78}
 @media(max-width:640px){.admin-heading-actions{align-items:flex-start;flex-direction:column}.admin-package-editor .admin-card{padding:18px}}

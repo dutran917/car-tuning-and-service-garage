@@ -32,7 +32,7 @@ function parsePackage(value: unknown) {
   if (images.some((image) => image === null)) return null;
   if (!safeVideos(input.videos ?? [])) return null;
   const videos = (input.videos ?? []) as { url: string; title: string }[];
-  return { slug, name: input.name as string, vehicle: input.vehicle as string, style: input.style as string, budget: input.budget as string, range: input.range as string, text: input.text as string, items: input.items as string[], imageUrl: null, images, videos, active: input.active !== false, sortOrder: Number.isInteger(input.sortOrder) ? input.sortOrder as number : 0 };
+  return { slug, name: input.name as string, vehicle: input.vehicle as string, style: input.style as string, budget: input.budget as string, range: input.range as string, text: input.text as string, items: input.items as string[], imageUrl: (input.imageUrl ?? null) as string | null, images, videos, active: input.active !== false, sortOrder: Number.isInteger(input.sortOrder) ? input.sortOrder as number : 0 };
 }
 
 function parseArticle(value: unknown) {
@@ -51,7 +51,7 @@ function parseArticle(value: unknown) {
     if (!safeImage(image.url) || typeof image.alt !== "string" || !image.alt.trim() || image.alt.length > 240 || typeof image.caption !== "string" || image.caption.length > 300 || !Number.isInteger(image.afterParagraph)) return null;
     const afterParagraph = image.afterParagraph as number;
     if (afterParagraph < 0 || afterParagraph > body.length) return null;
-    return { url: image.url, alt: image.alt.trim(), caption: image.caption.trim(), afterParagraph };
+    return { url: image.url, alt: image.alt.trim(), caption: image.caption.trim(), afterParagraph, isCover: image.isCover === true };
   });
   if (images.some((image) => image === null)) return null;
   if (!safeVideos(input.videos ?? [])) return null;

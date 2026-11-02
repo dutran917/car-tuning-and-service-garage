@@ -2,9 +2,46 @@ import type { Metadata } from "next";
 import { createElement } from "react";
 import { site } from "@/lib/site";
 
-export function pageMetadata(title: string, description: string, path: string): Metadata {
+export function pageMetadata(
+  title: string,
+  description: string,
+  path: string,
+  imageUrl?: string | null
+): Metadata {
   const canonical = `${site.url}${path}`;
-  return { title, description, alternates: { canonical }, openGraph: { title, description, url: canonical, siteName: `${site.name} – ${site.descriptor}`, locale: "vi_VN", type: "website" }, twitter: { card: "summary_large_image", title, description }, robots: { index: true, follow: true } };
+  const defaultOgImage = `${site.url}/og-image.jpg`;
+  const resolvedImage = imageUrl
+    ? (imageUrl.startsWith("http") ? imageUrl : `${site.url}${imageUrl}`)
+    : defaultOgImage;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: `${site.name} – ${site.descriptor}`,
+      locale: "vi_VN",
+      type: "website",
+      images: [
+        {
+          url: resolvedImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [resolvedImage],
+    },
+    robots: { index: true, follow: true },
+  };
 }
 
 export function JsonLd({ data }: { data: Record<string, unknown> }) {

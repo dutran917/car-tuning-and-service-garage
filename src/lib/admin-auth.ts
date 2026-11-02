@@ -32,5 +32,13 @@ export async function isAdmin() {
 
 export function sameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  return !origin || origin === new URL(request.url).origin;
+  if (!origin) return true;
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL;
+  let expectedOrigin: string;
+  try {
+    expectedOrigin = configuredOrigin ? new URL(configuredOrigin).origin : new URL(request.url).origin;
+    return new URL(origin).origin === expectedOrigin && origin === new URL(origin).origin;
+  } catch {
+    return false;
+  }
 }

@@ -1,4 +1,20 @@
 import { Breadcrumb, ProjectGallery, CTA } from "@/components/Sections";
 import { pageMetadata } from "@/lib/seo";
-export const metadata=pageMetadata("Thư viện concept độ xe VinFast VF3", "Tham khảo hướng thiết kế concept cho VinFast VF3. Website chưa có ảnh dự án thi công thực tế được xác minh.","/du-an");
-export default function ProjectsPage(){return <><div className="container page-wrap"><Breadcrumb items={[{label:"Thư viện bản độ"}]}/><header className="page-intro"><div className="eyebrow"><span className="eyebrow-line"/>BUILD LIBRARY</div><h1>Cảm hứng cho<br/><span>chiếc xe của bạn.</span></h1><p>Thư viện hiện giới thiệu hình ảnh concept để tham khảo phong cách. Chúng tôi chưa có tư liệu dự án thi công thực tế được xác minh để công khai.</p><div className="disclosure">Nhãn concept hiển thị trực tiếp trên từng hình. Không có thông tin chi phí hay cấu hình thi công thực tế được suy diễn.</div></header><ProjectGallery/></div><CTA/></>;}
+export const metadata = pageMetadata("Thư viện các bản độ hoàn thiện tại Quốc Dương Auto", "Khám phá các dự án nâng cấp xe thực tế đã thi công và bàn giao tại xưởng Quốc Dương Auto.", "/du-an");
+export default function ProjectsPage() {
+  return (
+    <>
+      <div className="container page-wrap">
+        <Breadcrumb items={[{ label: "Thư viện bản độ" }]} />
+        <header className="page-intro">
+          <div className="eyebrow"><span className="eyebrow-line" />BUILD LIBRARY</div>
+          <h1>Các bản độ thực tế<br /><span>tại Quốc Dương Auto.</span></h1>
+          <p>Mỗi chiếc xe rời xưởng là một tác phẩm được cá nhân hóa hoàn chỉnh — từ phong cách ngoại thất khí động học, mâm lốp thể thao đến không gian nội thất da Nappa sang trọng.</p>
+          <div className="disclosure">Hình ảnh thực tế 100% được chụp trực tiếp tại xưởng thi công Quốc Dương Auto. Cấu hình và chi phí thực tế được điều chỉnh linh hoạt theo từng yêu cầu riêng của chủ xe.</div>
+        </header>
+        <ProjectGallery />
+      </div>
+      <CTA />
+    </>
+  );
+}

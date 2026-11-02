@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
+import { sendLeadNotification } from "@/lib/lead-notification";
 
 export const runtime = "nodejs";
 type Touch = { landingPage?: string; referrer?: string; capturedAt?: string; utm_source?: string|null; utm_medium?: string|null; utm_campaign?: string|null; utm_content?: string|null; utm_term?: string|null; gclid?: string|null; gbraid?: string|null; wbraid?: string|null; fbclid?: string|null };
@@ -18,5 +19,23 @@ export async function POST(request:NextRequest){
   if(!process.env.DATABASE_URL)return NextResponse.json({error:"Hệ thống tiếp nhận yêu cầu chưa được cấu hình. Vui lòng thử lại sau hoặc nhắn tin qua Facebook."},{status:503});
   const attribution=body.attribution&&typeof body.attribution==="object"?body.attribution as Record<string,unknown>:{};let consentCookie:{analytics?:boolean;advertising?:boolean}={};try{consentCookie=JSON.parse(decodeURIComponent(request.cookies.get("qda-consent")?.value||"{}"));}catch{/* Invalid or missing consent defaults to denied. */}const analyticsConsent=consentCookie.analytics===true;const advertisingConsent=consentCookie.advertising===true;const stripUnlessConsent=(input:unknown)=>{const clean=cleanTouch(input);if(!analyticsConsent&&!advertisingConsent){for(const key of ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","gclid","gbraid","wbraid","fbclid"] as const)delete clean[key];}return clean;};
   const first=analyticsConsent||advertisingConsent?stripUnlessConsent(attribution.firstTouch):{};const latest=analyticsConsent||advertisingConsent?stripUnlessConsent(attribution.lastNonDirectTouch):{};const session=analyticsConsent||advertisingConsent?stripUnlessConsent(attribution.sessionTouch):{};const hasNonDirect=Object.entries(latest).some(([key,value])=>key!="landingPage"&&key!="referrer"&&key!="capturedAt"&&Boolean(value));
-  try{const lead=await getPrisma().lead.create({data:{idempotencyKey,name,phone,vehicle,upgrades,budget,notes,timing,preferredContact,packageSlug,attribution:{create:{firstTouch:first,lastNonDirectTouch:hasNonDirect?latest:first,sessionTouch:session,analyticsConsent,advertisingConsent}}},select:{id:true}});return NextResponse.json({leadId:lead.id,created:true},{status:201});}catch(error){if(error&&typeof error==="object"&&"code" in error&&error.code==="P2002"){const existing=await getPrisma().lead.findUnique({where:{idempotencyKey},select:{id:true}});if(existing)return NextResponse.json({leadId:existing.id,created:false},{status:200});}console.error("lead_persistence_failed",error instanceof Error?error.name:"unknown");return NextResponse.json({error:"Chưa lưu được yêu cầu. Vui lòng thử lại sau."},{status:503});}
+  try {
+    const lead = await getPrisma().lead.create({
+      data: { idempotencyKey, name, phone, vehicle, upgrades, budget, notes, timing, preferredContact, packageSlug, attribution: { create: { firstTouch: first, lastNonDirectTouch: hasNonDirect ? latest : first, sessionTouch: session, analyticsConsent, advertisingConsent } } },
+      select: { id: true },
+    });
+    try {
+      await sendLeadNotification({ id: lead.id, name, phone, vehicle, upgrades, budget, notes, timing, preferredContact, packageSlug });
+    } catch (error) {
+      console.error("lead_notification_failed", error instanceof Error ? error.message : "unknown");
+    }
+    return NextResponse.json({ leadId: lead.id, created: true }, { status: 201 });
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+      const existing = await getPrisma().lead.findUnique({ where: { idempotencyKey }, select: { id: true } });
+      if (existing) return NextResponse.json({ leadId: existing.id, created: false }, { status: 200 });
+    }
+    console.error("lead_persistence_failed", error instanceof Error ? error.name : "unknown");
+    return NextResponse.json({ error: "Chưa lưu được yêu cầu. Vui lòng thử lại sau." }, { status: 503 });
+  }
 }

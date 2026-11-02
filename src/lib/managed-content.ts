@@ -17,7 +17,7 @@ export type ManagedPackage = {
 
 export type PackageImage = { url: string; alt: string; caption: string };
 export type ManagedVideo = { url: string; title: string };
-export type ArticleImage = { url: string; alt: string; caption: string; afterParagraph: number };
+export type ArticleImage = { url: string; alt: string; caption: string; afterParagraph: number; isCover?: boolean };
 export type ManagedArticle = { slug: string; title: string; category: string; date: string; intro: string; body: string[]; related: string; images: ArticleImage[]; videos?: ManagedVideo[] };
 
 function normalize(row: { slug: string; name: string; vehicle: string; style: string; budget: string; range: string; text: string; items: unknown; imageUrl: string | null; images: unknown; videos: unknown }): ManagedPackage {
@@ -91,3 +91,5 @@ export async function seedManagedArticles() {
   if (await prisma.managedArticle.count()) return;
   await prisma.managedArticle.createMany({ data: defaultArticles.map((item) => ({ ...item, body: item.body, images: [] })) });
 }
+
+export { getVehicleBadge } from "@/lib/vehicle-badge";

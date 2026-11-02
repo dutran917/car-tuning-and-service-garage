@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ImageCropUpload } from "@/components/ImageCropUpload";
 import type { ArticleImage, ManagedArticle, ManagedVideo } from "@/lib/managed-content";
 import { uploadMedia } from "@/lib/upload-media";
 
@@ -44,13 +45,24 @@ export function ArticleAdmin() {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  async function upload(files: FileList | null) {
+  function articleCoverIndex() {
+    const explicit = draft.images.findIndex((image) => image.isCover);
+    return explicit >= 0 ? explicit : draft.images.length ? 0 : -1;
+  }
+
+  function removeArticleImage(index: number) {
+    const wasCover = articleCoverIndex() === index;
+    const remaining = draft.images.filter((_, imageIndex) => imageIndex !== index);
+    change("images", wasCover ? remaining.map((image, imageIndex) => ({ ...image, isCover: imageIndex === 0 })) : remaining);
+  }
+
+  async function upload(files: File[]) {
     if (!files?.length) return;
     setBusy(true); setStatus("");
     try {
-      const added = await Promise.all(Array.from(files).map(async (file, index): Promise<ArticleImage> => {
+      const added = await Promise.all(files.map(async (file, index): Promise<ArticleImage> => {
         const uploadedFile = await uploadMedia(file);
-        return { url: uploadedFile.url, alt: `${draft.title || "Ảnh minh họa bài viết"} — ảnh ${(draft.images.length + index + 1)}`, caption: "", afterParagraph: 1 };
+        return { url: uploadedFile.url, alt: `${draft.title || "Ảnh minh họa bài viết"} — ảnh ${(draft.images.length + index + 1)}`, caption: "", afterParagraph: 1, isCover: draft.images.length === 0 && index === 0 };
       }));
       setDraft((current) => ({ ...current, images: [...current.images, ...added] }));
       setStatus(`Đã tải ${added.length} ảnh. Bổ sung alt và chú thích trước khi lưu bài.`);
@@ -101,9 +113,9 @@ export function ArticleAdmin() {
     {status && <p className="admin-status" role="status">{status}</p>}
     <div className="admin-package-list">{articles.map((article) => <article key={article.slug}><div><Link className="admin-content-link" href={`/kien-thuc/${article.slug}`} target="_blank" rel="noreferrer"><strong>{article.title} ↗</strong></Link><span>{article.slug} · {article.images.length} ảnh · {article.videos?.length ?? 0} video</span></div><div className="admin-row-actions"><button type="button" onClick={() => setDraft({ ...article, body: [...article.body], images: article.images.map((image) => ({ ...image })), videos: (article.videos ?? []).map((video) => ({ ...video })) })}>Sửa</button><button type="button" onClick={() => void remove(article.slug)}>Xóa</button></div></article>)}</div>
     <form className="admin-editor" onSubmit={save}><h3>{existingSlug ? "Sửa bài viết" : "Thêm bài viết"}</h3><div className="admin-fields"><label>Tiêu đề<input required maxLength={180} value={draft.title} onChange={(event) => change("title", event.target.value)}/></label><label>Slug URL<input required disabled={existingSlug} pattern="[a-z0-9]+(-[a-z0-9]+)*" value={draft.slug} onChange={(event) => change("slug", event.target.value)}/></label><label>Chuyên mục<input required value={draft.category} onChange={(event) => change("category", event.target.value)}/></label><label>Ngày đăng<input required type="date" value={draft.date} onChange={(event) => change("date", event.target.value)}/></label><label className="admin-wide">Mô tả mở đầu<textarea required maxLength={600} rows={2} value={draft.intro} onChange={(event) => change("intro", event.target.value)}/></label><label className="admin-wide">Nội dung bài viết<textarea required rows={10} value={draft.body.join("\n\n")} onChange={(event) => change("body", event.target.value.split(/\n\s*\n/))} placeholder="Mỗi đoạn cách nhau một dòng trống."/></label><label>Dịch vụ liên quan (slug)<input required value={draft.related} onChange={(event) => change("related", event.target.value)}/></label><label className="admin-check"><input type="checkbox" checked={draft.active} onChange={(event) => change("active", event.target.checked)}/> Hiển thị bài viết</label></div>
-      <label className="admin-upload admin-multi-upload">Thêm nhiều ảnh cùng lúc<input type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(event) => void upload(event.target.files)}/></label><span className="admin-upload-hint">Chọn nhiều ảnh JPG, PNG hoặc WebP · tối đa 8 MB mỗi ảnh.</span>
+      <ImageCropUpload label="Thêm nhiều ảnh cùng lúc" multiple aspect={4 / 3} disabled={busy} onCropped={(files) => void upload(files)}/><span className="admin-upload-hint">Chọn vùng cắt 4:3 cho ảnh bài viết · ảnh được nén WebP.</span>
       <label className="admin-upload admin-multi-upload">Tải video bài viết<input type="file" multiple accept="video/mp4,video/webm,.mp4,.webm" onChange={(event) => void uploadVideos(event.target.files)}/></label><span className="admin-upload-hint">Tối đa 8 video MP4/WebM · 100 MB mỗi tệp · phát tự động khi cuộn tới.</span>
-      {draft.images.length > 0 && <div className="article-admin-images">{draft.images.map((image, index) => <div className="article-admin-image" key={`${image.url}-${index}`}><div className="article-admin-thumb" style={{ backgroundImage: `url("${image.url}")` }} role="img" aria-label={image.alt}/><div className="article-admin-image-fields"><label>Alt text<input required maxLength={240} value={image.alt} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, alt: event.target.value } : entry))}/></label><label>Chú thích ảnh<input maxLength={300} value={image.caption} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, caption: event.target.value } : entry))}/></label><label>Chèn sau đoạn<input type="number" min={0} max={draft.body.length} value={image.afterParagraph} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, afterParagraph: Number(event.target.value) } : entry))}/></label><button type="button" className="admin-image-remove" onClick={() => change("images", draft.images.filter((_, i) => i !== index))}>Gỡ ảnh khỏi bài</button></div></div>)}</div>}
+      {draft.images.length > 0 && <div className="article-admin-images">{draft.images.map((image, index) => <div className="article-admin-image" key={`${image.url}-${index}`}><div className="article-admin-thumb" style={{ backgroundImage: `url("${image.url}")` }} role="img" aria-label={image.alt}/><div className="article-admin-image-fields"><label>Alt text<input required maxLength={240} value={image.alt} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, alt: event.target.value } : entry))}/></label><label>Chú thích ảnh<input maxLength={300} value={image.caption} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, caption: event.target.value } : entry))}/></label><label>Chèn sau đoạn<input type="number" min={0} max={draft.body.length} value={image.afterParagraph} onChange={(event) => change("images", draft.images.map((entry, i) => i === index ? { ...entry, afterParagraph: Number(event.target.value) } : entry))}/></label><button type="button" className="admin-image-cover" aria-pressed={articleCoverIndex() === index} onClick={() => change("images", draft.images.map((entry, imageIndex) => ({ ...entry, isCover: imageIndex === index })))}>{articleCoverIndex() === index ? "Ảnh preview bài viết ✓" : "Đặt làm ảnh preview"}</button><button type="button" className="admin-image-remove" onClick={() => removeArticleImage(index)}>Gỡ ảnh khỏi bài</button></div></div>)}</div>}
       {(draft.videos ?? []).length > 0 && <div className="article-admin-images">{(draft.videos ?? []).map((video, index) => <div className="article-admin-image" key={`${video.url}-${index}`}><video className="admin-video-preview" src={video.url} muted playsInline controls preload="metadata"/><div className="article-admin-image-fields"><label>Chú thích video (không bắt buộc)<input maxLength={180} value={video.title} onChange={(event) => change("videos", (draft.videos ?? []).map((entry, i) => i === index ? { ...entry, title: event.target.value } : entry))}/></label><button type="button" className="admin-image-remove" onClick={() => change("videos", (draft.videos ?? []).filter((_, i) => i !== index))}>Gỡ video khỏi bài</button></div></div>)}</div>}
       <div className="admin-form-actions"><button type="button" className="admin-logout" onClick={() => setDraft(emptyArticle())}>Bài mới</button><button className="button" disabled={busy}>{busy ? "Đang lưu…" : "Lưu bài viết"}</button></div>
     </form>

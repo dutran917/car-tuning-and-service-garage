@@ -20,7 +20,7 @@ export async function uploadMedia(file: File) {
     return { url: signed.publicUrl as string, mediaType: file.type.startsWith("video/") ? "video" as const : "image" as const };
   }
 
-  if (process.env.NODE_ENV === "production" && file.size > 4 * 1024 * 1024) throw new Error("Cần cấu hình Supabase Storage để tải tệp lớn trong production.");
+  if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_UPLOAD_TARGET !== "server" && file.size > 4 * 1024 * 1024) throw new Error("Cần cấu hình Supabase Storage để tải tệp lớn trong production.");
 
   const form = new FormData();
   form.set("file", file);
