@@ -288,8 +288,8 @@ export function LeadForm({
       </label>
 
       <button className="button submit-button" type="submit" disabled={busy}>
-        {busy ? "Đang gửi yêu cầu…" : "Gửi yêu cầu tư vấn"}
-        <BrandIcon name="arrow-up-right" />
+        <BrandIcon name="send" />
+        <span>{busy ? "Đang gửi yêu cầu…" : "Gửi yêu cầu tư vấn"}</span>
       </button>
 
       {message && (

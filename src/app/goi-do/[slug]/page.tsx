@@ -51,12 +51,9 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
             <ul className="detail-list">{item.items.map((row, index) => <li key={`${item.slug}-item-${index}`}>{row}</li>)}</ul>
             <h2>Trước khi xác nhận</h2>
             <p>Yêu cầu xác nhận sản phẩm và tính tương thích với phiên bản xe, thời gian dự kiến, chi phí phát sinh (nếu có) và điều kiện bảo hành của từng hạng mục.</p>
-            <PackageDetailActions
-              packageSlug={item.slug}
-              packageName={item.name}
-              vehicle={item.vehicle}
-              variant="primary"
-            />
+            <div className="detail-article-footer">
+              <Link className="text-link" href="/dich-vu">Xem tất cả dịch vụ nâng cấp <BrandIcon name="arrow-right"/></Link>
+            </div>
           </article>
           <aside className="detail-aside">
             <span>{item.vehicle}</span>
@@ -68,7 +65,6 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
               packageSlug={item.slug}
               packageName={item.name}
               vehicle={item.vehicle}
-              variant="aside"
             />
           </aside>
         </div>
