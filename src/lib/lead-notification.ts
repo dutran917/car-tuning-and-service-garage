@@ -11,14 +11,6 @@ type LeadNotification = {
   packageSlug: string | null;
 };
 
-export type PackageInterestNotification = {
-  packageSlug: string;
-  packageName: string;
-  vehicle: string;
-  action: "chat_zalo" | "tu_van_cau_hinh" | "gui_yeu_cau" | string;
-  pageUrl: string;
-};
-
 const TARGET_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || "ductcp@gmail.com";
 
 export async function sendLeadNotification(lead: LeadNotification) {
@@ -110,7 +102,7 @@ export async function sendLeadNotification(lead: LeadNotification) {
     </div>
   `;
 
-  // 1. FormSubmit API (Direct email relay to ductcp@gmail.com)
+  // 1. FormSubmit API (Direct email relay to ductcp@gmail.com when form is SUBMITTED)
   try {
     const fsRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(TARGET_EMAIL)}`, {
       method: "POST",
@@ -134,11 +126,11 @@ export async function sendLeadNotification(lead: LeadNotification) {
         "Kênh ưu tiên liên hệ": lead.preferredContact || "Điện thoại / Zalo",
         "Nội dung / Nhu cầu": lead.notes || "Không có",
         "Mã yêu cầu": `#${lead.id}`,
-        "Thời gian": nowStr,
+        "Thời gian gửi": nowStr,
       }),
     });
     const fsJson = await fsRes.json().catch(() => null);
-    console.log(`[LEAD NOTIFICATION] Đã gửi qua FormSubmit đến ${TARGET_EMAIL}:`, fsJson?.message || fsRes.status);
+    console.log(`[LEAD NOTIFICATION] Đã gửi FormSubmit tới ${TARGET_EMAIL}:`, fsJson?.message || fsRes.status);
   } catch (fsErr) {
     console.error("[LEAD NOTIFICATION] FormSubmit gửi lỗi:", fsErr);
   }
@@ -147,7 +139,7 @@ export async function sendLeadNotification(lead: LeadNotification) {
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {
-      const response = await fetch("https://api.resend.com/emails", {
+      await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${resendApiKey}`,
@@ -162,47 +154,12 @@ export async function sendLeadNotification(lead: LeadNotification) {
           html: htmlContent,
         }),
       });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        console.error("resend_notification_failed", response.status, errText);
-      } else {
-        console.log(`[LEAD NOTIFICATION] Đã gửi email thành công đến ${TARGET_EMAIL} qua Resend`);
-      }
     } catch (err) {
       console.error("resend_fetch_error", err);
     }
   }
 
-  // 3. Brevo API (Sendinblue)
-  const brevoApiKey = process.env.BREVO_API_KEY;
-  if (brevoApiKey && !resendApiKey) {
-    try {
-      const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: {
-          "api-key": brevoApiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sender: { name: "Quốc Dương Auto", email: "thongbao@quocduong-auto.com" },
-          to: [{ email: TARGET_EMAIL, name: "Quốc Dương Auto" }],
-          subject: `🔥 Yêu cầu tư vấn độ xe mới · ${lead.name} (${lead.vehicle})`,
-          htmlContent,
-          textContent: lines.join("\n"),
-        }),
-      });
-      if (!response.ok) {
-        console.error("brevo_notification_failed", response.status, await response.text());
-      } else {
-        console.log(`[LEAD NOTIFICATION] Đã gửi email thành công đến ${TARGET_EMAIL} qua Brevo`);
-      }
-    } catch (err) {
-      console.error("brevo_fetch_error", err);
-    }
-  }
-
-  // 4. Telegram Bot Notification (Instant alert to phone)
+  // 3. Telegram Bot Notification (if configured)
   const tgToken = process.env.TELEGRAM_BOT_TOKEN;
   const tgChatId = process.env.TELEGRAM_CHAT_ID;
   if (tgToken && tgChatId) {
@@ -225,73 +182,8 @@ export async function sendLeadNotification(lead: LeadNotification) {
           parse_mode: "HTML",
         }),
       });
-      console.log(`[LEAD NOTIFICATION] Đã gửi thông báo Telegram cho lead #${lead.id}`);
     } catch (err) {
       console.error("telegram_notification_failed", err);
-    }
-  }
-}
-
-export async function sendPackageInterestNotification(info: PackageInterestNotification) {
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://quocduong-auto.com").replace(/\/$/, "");
-  const nowStr = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
-
-  const actionText =
-    info.action === "chat_zalo"
-      ? "Bấm nút 'Chat Zalo ngay' (chuẩn bị nhắn qua Zalo 0399.513.456)"
-      : info.action === "tu_van_cau_hinh"
-      ? "Bấm nút 'Tư vấn cấu hình này' (chuyển sang trang điền form)"
-      : "Bấm quan tâm gói độ trên web";
-
-  try {
-    const fsRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(TARGET_EMAIL)}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Referer": siteUrl,
-      },
-      body: JSON.stringify({
-        _subject: `⚡ [QUAN TÂM GÓI ĐỘ] ${info.packageName} (${info.vehicle})`,
-        _template: "table",
-        _captcha: "false",
-        "Hành động khách hàng": actionText,
-        "Tên gói độ": info.packageName,
-        "Dòng xe": info.vehicle,
-        "Link gói độ": info.pageUrl,
-        "Thời gian": nowStr,
-        "Lưu ý cho chủ xưởng": "Khách hàng vừa bấm quan tâm gói độ này. Hãy chú ý tin nhắn Zalo đến số 0399.513.456 hoặc cuộc gọi mới!",
-      }),
-    });
-    const fsJson = await fsRes.json().catch(() => null);
-    console.log(`[PACKAGE INTEREST] Đã gửi thông báo quan tâm gói độ đến ${TARGET_EMAIL}:`, fsJson?.message || fsRes.status);
-  } catch (err) {
-    console.error("[PACKAGE INTEREST] FormSubmit gửi lỗi:", err);
-  }
-
-  // Also notify Telegram if configured
-  const tgToken = process.env.TELEGRAM_BOT_TOKEN;
-  const tgChatId = process.env.TELEGRAM_CHAT_ID;
-  if (tgToken && tgChatId) {
-    try {
-      const tgText = `⚡ <b>KHÁCH HÀNG QUAN TÂM GÓI ĐỘ</b>\n\n` +
-        `🛠 <b>Gói:</b> ${info.packageName}\n` +
-        `🚘 <b>Dòng xe:</b> ${info.vehicle}\n` +
-        `📌 <b>Hành động:</b> ${actionText}\n` +
-        `🔗 <b>Link:</b> <a href="${info.pageUrl}">${info.pageUrl}</a>\n` +
-        `⏰ <b>Thời gian:</b> ${nowStr}`;
-
-      await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: tgChatId,
-          text: tgText,
-          parse_mode: "HTML",
-        }),
-      });
-    } catch (err) {
-      console.error("telegram_interest_failed", err);
     }
   }
 }

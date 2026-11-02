@@ -137,18 +137,16 @@ export function LeadForm({
       setLeadId(result.leadId);
       setMessage("Yêu cầu tư vấn của bạn đã được gửi thành công!");
       setZaloMessage(preparedMessage);
-      setCopyMessage("Đã tự động sao chép nội dung tin nhắn!");
+      setCopyMessage("Đã sao chép nội dung tin nhắn!");
       setIdempotencyKey("");
       form.reset();
 
-      // Automatically copy to clipboard for seamless Zalo handoff
+      // Automatically copy to clipboard for quick Zalo chat
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(preparedMessage);
         }
-      } catch {
-        // Fallback
-      }
+      } catch {}
 
       if (result.created) {
         track({
@@ -184,17 +182,14 @@ export function LeadForm({
 
       {packageData && (
         <div className="lead-package-banner">
-          <span className="banner-tag">GÓI ĐANG CHỌN</span>
-          <strong className="banner-title">{packageData.name}</strong>
-          <span className="banner-sub">
-            Dòng xe: <em>{packageData.vehicle}</em> · Thông tin này sẽ tự động gửi kèm đến quản lý gara.
-          </span>
+          <span className="banner-tag">GÓI ĐANG XEM</span>
+          <span className="banner-title">{packageData.name} ({packageData.vehicle})</span>
         </div>
       )}
 
       <div className="form-grid">
-        <label>
-          Họ và tên <em>*</em>
+        <label className="form-field">
+          <span className="field-label">Họ và tên <em>*</em></span>
           <input
             name="name"
             required
@@ -204,8 +199,8 @@ export function LeadForm({
             placeholder="Tên của bạn"
           />
         </label>
-        <label>
-          Số điện thoại <em>*</em>
+        <label className="form-field">
+          <span className="field-label">Số điện thoại <em>*</em></span>
           <input
             name="phone"
             required
@@ -217,8 +212,8 @@ export function LeadForm({
             placeholder="Ví dụ: 0987654321"
           />
         </label>
-        <label>
-          Dòng xe / phiên bản <em>*</em>
+        <label className="form-field">
+          <span className="field-label">Dòng xe / phiên bản <em>*</em></span>
           <input
             name="vehicle"
             required
@@ -227,8 +222,8 @@ export function LeadForm({
             placeholder="Ví dụ: VinFast VF3, VF7, Mazda 3..."
           />
         </label>
-        <label>
-          Ngân sách dự kiến
+        <label className="form-field">
+          <span className="field-label">Ngân sách dự kiến</span>
           <select name="budget" defaultValue="">
             <option value="">Chọn khoảng ngân sách</option>
             <option>Dưới 30 triệu</option>
@@ -241,8 +236,8 @@ export function LeadForm({
         </label>
       </div>
 
-      <fieldset>
-        <legend>Hạng mục bạn quan tâm</legend>
+      <fieldset className="form-fieldset">
+        <legend className="field-label">Hạng mục bạn quan tâm</legend>
         <div className="check-grid">
           {upgradeOptions.map((item) => (
             <label className="check-option" key={item}>
@@ -254,8 +249,8 @@ export function LeadForm({
       </fieldset>
 
       <div className="form-grid">
-        <label>
-          Thời điểm dự kiến
+        <label className="form-field">
+          <span className="field-label">Thời điểm dự kiến</span>
           <select name="timing" defaultValue="">
             <option value="">Chưa xác định</option>
             <option>Càng sớm càng tốt</option>
@@ -264,8 +259,8 @@ export function LeadForm({
             <option>Đang tham khảo</option>
           </select>
         </label>
-        <label>
-          Kênh liên hệ mong muốn
+        <label className="form-field">
+          <span className="field-label">Kênh liên hệ mong muốn</span>
           <select name="preferredContact" defaultValue="Điện thoại">
             <option>Điện thoại</option>
             <option>Zalo</option>
@@ -274,13 +269,13 @@ export function LeadForm({
         </label>
       </div>
 
-      <label>
-        Mô tả nhu cầu / phong cách
+      <label className="form-field">
+        <span className="field-label">Mô tả nhu cầu / phong cách</span>
         <textarea
           name="notes"
-          rows={4}
+          rows={3}
           maxLength={2000}
-          placeholder="Bạn muốn chiếc xe thay đổi như thế nào? (VD: độ body kit hầm hố, nâng cấp màn hình, dán cách âm...)"
+          placeholder="Bạn muốn chiếc xe thay đổi như thế nào? (VD: độ body kit, nâng cấp màn hình, dán cách âm...)"
         />
       </label>
 
@@ -304,7 +299,7 @@ export function LeadForm({
               <span className="success-badge"><BrandIcon name="check"/> ĐÃ TIẾP NHẬN YÊU CẦU</span>
               <h3>{message}</h3>
               <p>
-                Thông tin cấu hình xe đã được gửi trực tiếp đến quản lý Quốc Dương Auto (email: ductcp@gmail.com). Kỹ thuật viên sẽ liên hệ lại với bạn trong thời gian sớm nhất{submittedPhone ? ` qua số: ${submittedPhone}` : ""}.
+                Thông tin cấu hình xe đã được gửi trực tiếp đến quản lý Quốc Dương Auto (ductcp@gmail.com). Kỹ thuật viên sẽ liên hệ lại qua số: <strong>{submittedPhone}</strong> trong thời gian sớm nhất.
               </p>
             </div>
             <div className="lead-quick-actions">
@@ -320,15 +315,15 @@ export function LeadForm({
                   } catch {}
                 }}
               >
-                Chat Zalo ngay với gara (0399.513.456) <BrandIcon name="arrow-up-right"/>
+                Chat Zalo với gara (0399.513.456) <BrandIcon name="arrow-up-right"/>
               </a>
               <a className="button button-outline phone-action-btn" href="tel:0399513456" data-track="phone">
                 Gọi Hotline: 0399.513.456 <BrandIcon name="arrow-up-right"/>
               </a>
             </div>
-            <details className="zalo-optional-details" open>
-              <summary>Nội dung cấu hình đã gửi</summary>
-              <textarea className="zalo-message-preview" aria-label="Nội dung đã gửi" readOnly value={zaloMessage} rows={7} />
+            <details className="zalo-optional-details">
+              <summary>Xem lại nội dung yêu cầu đã gửi</summary>
+              <textarea className="zalo-message-preview" aria-label="Nội dung đã gửi" readOnly value={zaloMessage} rows={5} />
               <div className="zalo-handoff-actions">
                 <button
                   className="button button-small"
@@ -344,7 +339,6 @@ export function LeadForm({
                 >
                   {copyMessage.startsWith("Đã") ? <>Đã sao chép <BrandIcon name="check"/></> : "Sao chép tin nhắn"}
                 </button>
-                <small className="copy-hint">Mở Zalo và dán (Paste) để trao đổi nhanh với kỹ thuật viên</small>
               </div>
             </details>
             <small className="lead-ref-id">Mã yêu cầu: #{leadId}</small>

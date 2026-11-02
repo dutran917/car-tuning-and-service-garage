@@ -825,64 +825,62 @@ html, body {
 }
 
 /* ==========================================================================
-   CONSULTATION FORM & LEAD OVERHAUL (Senior / 40-50+ Readability & Usability)
+   CONSULTATION FORM (Clean, Balanced & Perfectly Proportioned)
    ========================================================================== */
 
 .lead-package-banner {
-  background: #1b201d;
-  border: 1px solid var(--orange);
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin-bottom: 20px;
+  background: #161918;
+  border: 1px solid #333936;
+  border-left: 3px solid var(--orange);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 10px;
 }
 
 .lead-package-banner .banner-tag {
   font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: var(--orange);
+  background: rgba(242, 106, 50, 0.12);
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 .lead-package-banner .banner-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.35;
-}
-
-.lead-package-banner .banner-sub {
   font-size: 13px;
-  color: #aeb4ae;
+  font-weight: 600;
+  color: #f0f0ed;
 }
 
-.lead-package-banner .banner-sub em {
-  font-style: normal;
-  color: #f26a32;
-  font-weight: 700;
-}
-
-/* Form container & fields */
+/* Form structure */
 .lead-form {
   display: flex !important;
   flex-direction: column !important;
-  gap: 20px !important;
+  gap: 14px !important;
 }
 
-.lead-form label {
+.form-field {
   display: flex !important;
   flex-direction: column !important;
-  gap: 8px !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  color: #f2f5f2 !important;
-  letter-spacing: 0.15px !important;
+  gap: 6px !important;
 }
 
-.lead-form label em {
+.field-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #c0c6c0 !important;
+  letter-spacing: 0.2px !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.field-label em {
   color: var(--orange) !important;
   font-style: normal !important;
   margin-left: 2px !important;
@@ -892,38 +890,21 @@ html, body {
 .lead-form select,
 .lead-form textarea {
   width: 100% !important;
-  background: #141716 !important;
-  border: 1px solid #3c4340 !important;
-  border-radius: 6px !important;
-  padding: 13px 16px !important;
+  background: #131514 !important;
+  border: 1px solid #323835 !important;
+  border-radius: 4px !important;
+  padding: 10px 12px !important;
   color: #ffffff !important;
-  font-size: 16px !important; /* Prevents mobile Safari auto-zoom and ensures clear readability */
+  font-size: 14px !important;
+  line-height: 1.4 !important;
   box-sizing: border-box !important;
-  transition: border-color .18s, box-shadow .18s !important;
+  transition: border-color .15s !important;
 }
 
 .lead-form input:not([type=checkbox]),
 .lead-form select {
-  min-height: 52px !important;
-}
-
-.lead-form textarea {
-  min-height: 110px !important;
-  line-height: 1.6 !important;
-  resize: vertical !important;
-}
-
-.lead-form input::placeholder,
-.lead-form textarea::placeholder {
-  color: #838a84 !important;
-}
-
-.lead-form input:focus,
-.lead-form select:focus,
-.lead-form textarea:focus {
-  border-color: var(--orange) !important;
-  outline: none !important;
-  box-shadow: 0 0 0 2px rgba(242, 106, 50, 0.25) !important;
+  height: 42px !important;
+  min-height: 42px !important;
 }
 
 .lead-form select {
@@ -931,60 +912,76 @@ html, body {
   cursor: pointer !important;
 }
 
-.lead-form fieldset {
-  margin: 4px 0 0 !important;
+.lead-form textarea {
+  min-height: 80px !important;
+  line-height: 1.5 !important;
+  resize: vertical !important;
+}
+
+.lead-form input::placeholder,
+.lead-form textarea::placeholder {
+  color: #6e7570 !important;
+  font-size: 13px !important;
+}
+
+.lead-form input:focus,
+.lead-form select:focus,
+.lead-form textarea:focus {
+  border-color: var(--orange) !important;
+  outline: none !important;
+}
+
+.form-fieldset {
+  margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
 }
 
-.lead-form legend {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #f2f5f2 !important;
-  margin-bottom: 12px !important;
-  padding: 0 !important;
-}
-
-/* Checkbox Grid - Big touch targets for fingers */
+/* Checkbox Grid - Horizontal Sleek Cards */
 .check-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
+  gap: 8px !important;
 }
 
 .lead-form .check-option {
   display: flex !important;
+  flex-direction: row !important;
   align-items: center !important;
-  gap: 12px !important;
-  min-height: 52px !important;
-  padding: 12px 14px !important;
-  background: #171a19 !important;
-  border: 1px solid #333a36 !important;
-  border-radius: 6px !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  color: #e5eae5 !important;
+  gap: 9px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 12px !important;
+  background: #151817 !important;
+  border: 1px solid #2d3330 !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #c4cac4 !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
-  transition: all .18s ease !important;
+  transition: all .15s ease !important;
   user-select: none !important;
 }
 
 .lead-form .check-option:hover {
-  border-color: #555e58 !important;
-  background: #1c201e !important;
+  border-color: #4b524e !important;
+  background: #1a1d1c !important;
 }
 
 .lead-form .check-option:has(input:checked) {
   border-color: var(--orange) !important;
-  background: rgba(242, 106, 50, 0.12) !important;
+  background: rgba(242, 106, 50, 0.08) !important;
   color: #fff !important;
 }
 
 .lead-form .check-option input {
-  width: 22px !important;
-  height: 22px !important;
-  min-width: 22px !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
   accent-color: var(--orange) !important;
   cursor: pointer !important;
   flex-shrink: 0 !important;
@@ -992,30 +989,35 @@ html, body {
 }
 
 .lead-form .check-option span {
-  font-size: 15px !important;
-  line-height: 1.35 !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  color: inherit !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
-/* Privacy Consent Checkbox */
+/* Privacy Consent */
 .lead-form .privacy-check {
   display: flex !important;
   flex-direction: row !important;
   align-items: flex-start !important;
-  gap: 12px !important;
-  padding: 12px 0 !important;
-  font-size: 14px !important;
-  line-height: 1.6 !important;
-  color: #b8c0b8 !important;
+  gap: 9px !important;
+  padding: 2px 0 !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  color: #8e958e !important;
   cursor: pointer !important;
 }
 
 .lead-form .privacy-check input {
-  width: 22px !important;
-  height: 22px !important;
-  min-width: 22px !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
   accent-color: var(--orange) !important;
   flex-shrink: 0 !important;
-  margin-top: 3px !important;
+  margin-top: 2px !important;
   cursor: pointer !important;
 }
 
@@ -1027,22 +1029,23 @@ html, body {
 /* Submit Button */
 .lead-form .submit-button {
   width: 100% !important;
-  min-height: 56px !important;
-  font-size: 16px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  font-size: 13px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   background: var(--orange) !important;
   color: #111 !important;
   border: 1px solid var(--orange) !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 12px !important;
+  gap: 8px !important;
   cursor: pointer !important;
-  margin-top: 8px !important;
-  transition: background .18s, border-color .18s !important;
+  margin-top: 4px !important;
+  transition: background .15s !important;
 }
 
 .lead-form .submit-button:hover {
@@ -1059,62 +1062,55 @@ html, body {
 .form-success-card {
   background: #171c19 !important;
   border: 1px solid #2e7d32 !important;
-  border-radius: 8px !important;
-  padding: 24px !important;
-  margin-top: 14px !important;
+  border-radius: 6px !important;
+  padding: 20px !important;
+  margin-top: 10px !important;
 }
 
 .form-success-card h3 {
-  font-size: 18px !important;
+  font-size: 16px !important;
   color: #fff !important;
-  margin: 10px 0 8px !important;
+  margin: 8px 0 6px !important;
 }
 
 .form-success-card p {
-  font-size: 14px !important;
-  line-height: 1.6 !important;
-  color: #d0d7d1 !important;
-  margin: 0 0 16px !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: #c8d0c8 !important;
+  margin: 0 0 14px !important;
 }
 
 .lead-quick-actions {
   display: flex !important;
   flex-direction: column !important;
-  gap: 10px !important;
+  gap: 8px !important;
 }
 
 .lead-quick-actions .button {
   width: 100% !important;
   justify-content: center !important;
-  min-height: 50px !important;
-  font-size: 15px !important;
+  min-height: 44px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
 }
 
-.copy-hint {
-  display: block;
-  font-size: 12px;
-  color: #929992;
-  margin-top: 6px;
-}
-
-/* Detail page actions & Toast */
+/* Detail page actions */
 .aside-quote-btn {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   background: var(--orange) !important;
   color: #111 !important;
   font-weight: 800 !important;
-  font-size: 14px !important;
-  padding: 14px 18px !important;
+  font-size: 13px !important;
+  padding: 12px 16px !important;
   border-radius: 4px !important;
-  margin-top: 18px !important;
+  margin-top: 14px !important;
   width: 100% !important;
   text-align: center !important;
-  transition: background .18s !important;
+  transition: background .15s !important;
 }
 
 .aside-quote-btn:hover {
@@ -1125,19 +1121,19 @@ html, body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   background: #0068ff !important;
   color: #fff !important;
   font-weight: 800 !important;
-  font-size: 14px !important;
-  padding: 14px 18px !important;
+  font-size: 13px !important;
+  padding: 12px 16px !important;
   border-radius: 4px !important;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   width: 100% !important;
   text-align: center !important;
   border: 0 !important;
   cursor: pointer !important;
-  transition: background .18s !important;
+  transition: background .15s !important;
 }
 
 .aside-zalo-btn:hover {
@@ -1161,24 +1157,24 @@ html, body {
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(92vw, 460px);
+  width: min(92vw, 420px);
   background: #191d1b;
   border: 1px solid var(--orange);
-  border-radius: 8px;
-  padding: 14px 18px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  padding: 10px 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
   z-index: 9999;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: #fff;
-  font-size: 13px;
-  line-height: 1.5;
-  animation: toastFadeIn .25s ease-out;
+  font-size: 12px;
+  line-height: 1.4;
+  animation: toastFadeIn .2s ease-out;
 }
 
 .zalo-toast-notification .toast-icon {
-  font-size: 22px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
@@ -1190,7 +1186,7 @@ html, body {
 @keyframes toastFadeIn {
   from {
     opacity: 0;
-    transform: translate(-50%, 15px);
+    transform: translate(-50%, 12px);
   }
   to {
     opacity: 1;
@@ -1198,33 +1194,46 @@ html, body {
   }
 }
 
-/* Mobile adjustments & Anti-overlap for floating buttons */
+/* Mobile adjustments */
 @media(max-width: 740px) {
   .quote-page,
   .form-panel,
   .lead-form {
-    padding-bottom: 120px !important; /* Critical: keeps submit button clear of bottom floating widgets */
+    padding-bottom: 70px !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 
   .check-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
+    gap: 7px !important;
+  }
+
+  .lead-form input:not([type=checkbox]),
+  .lead-form select {
+    font-size: 15px !important;
+    height: 44px !important;
+    min-height: 44px !important;
   }
 
   .lead-form .check-option {
-    min-height: 50px !important;
-    padding: 10px 12px !important;
-    font-size: 14px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
   }
 
   .lead-form .check-option span {
-    font-size: 14px !important;
+    font-size: 12px !important;
   }
 
   .zalo-toast-notification {
-    bottom: 95px;
-    font-size: 12px;
-    padding: 12px 14px;
+    bottom: 85px;
+    font-size: 11px;
+    padding: 9px 12px;
   }
 }
 

@@ -19,59 +19,23 @@ export function PackageDetailActions({ packageSlug, packageName, vehicle, varian
     const fullUrl = typeof window !== "undefined" ? window.location.href : `https://quocduong-auto.com/goi-do/${packageSlug}`;
     const zaloMsg = `Chào Quốc Dương Auto (0399.513.456), tôi đang quan tâm gói độ: "${packageName}" (${vehicle}).\nLink tham khảo: ${fullUrl}\nTư vấn chi tiết cấu hình và chi phí giúp tôi nhé!`;
 
-    // 1. Copy message to clipboard
+    // Copy message to clipboard for easy pasting in Zalo
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(zaloMsg);
       }
     } catch {
-      // Fallback: clipboard might fail in some restricted webviews
+      // Fallback
     }
 
-    // 2. Fire interest notification in background to ductcp@gmail.com
-    try {
-      fetch("/api/leads/interest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          packageSlug,
-          packageName,
-          vehicle,
-          action: "chat_zalo",
-          pageUrl: fullUrl,
-        }),
-      }).catch(() => null);
-    } catch {
-      // Non-blocking
-    }
-
-    // 3. Display toast
-    setToastMessage("Đã sao chép thông tin gói độ! Đang mở Zalo 0399.513.456, bạn hãy DÁN (Paste) tin nhắn vào chat nhé.");
+    // Display toast
+    setToastMessage("Đã sao chép link gói độ! Mở Zalo dán (Paste) để gửi ngay cho gara.");
     setTimeout(() => {
       setToastMessage(null);
-    }, 6000);
+    }, 4500);
 
-    // 4. Open Zalo
+    // Open Zalo without sending any unwanted email
     window.open(site.zalo, "_blank", "noopener,noreferrer");
-  }
-
-  async function handleQuoteClick() {
-    const fullUrl = typeof window !== "undefined" ? window.location.href : `https://quocduong-auto.com/goi-do/${packageSlug}`;
-    try {
-      fetch("/api/leads/interest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          packageSlug,
-          packageName,
-          vehicle,
-          action: "tu_van_form",
-          pageUrl: fullUrl,
-        }),
-      }).catch(() => null);
-    } catch {
-      // Non-blocking
-    }
   }
 
   if (variant === "aside") {
@@ -80,7 +44,6 @@ export function PackageDetailActions({ packageSlug, packageName, vehicle, varian
         <Link
           href={`/tu-van?package=${encodeURIComponent(packageSlug)}`}
           className="aside-quote-btn"
-          onClick={handleQuoteClick}
         >
           Gửi yêu cầu tư vấn <BrandIcon name="arrow-up-right" />
         </Link>
@@ -109,7 +72,6 @@ export function PackageDetailActions({ packageSlug, packageName, vehicle, varian
         <Link
           className="button"
           href={`/tu-van?package=${encodeURIComponent(packageSlug)}`}
-          onClick={handleQuoteClick}
         >
           Tư vấn cấu hình này <BrandIcon name="arrow-up-right" />
         </Link>

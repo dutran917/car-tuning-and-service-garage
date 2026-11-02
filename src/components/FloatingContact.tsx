@@ -9,27 +9,12 @@ export function FloatingContact() {
   function handleZaloClick() {
     if (typeof window !== "undefined" && pathname.startsWith("/goi-do/")) {
       const fullUrl = window.location.href;
-      const slug = pathname.replace("/goi-do/", "");
       const msg = `Chào Quốc Dương Auto (0399.513.456), tôi đang xem bài viết/gói độ tại: ${fullUrl}. Nhờ gara tư vấn cấu hình và báo giá giúp tôi!`;
 
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(msg).catch(() => null);
         }
-      } catch {}
-
-      try {
-        fetch("/api/leads/interest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            packageSlug: slug,
-            packageName: "Khách xem chi tiết gói độ",
-            vehicle: "Xe khách quan tâm",
-            action: "floating_zalo",
-            pageUrl: fullUrl,
-          }),
-        }).catch(() => null);
       } catch {}
     }
   }
