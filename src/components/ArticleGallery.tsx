@@ -216,17 +216,19 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
               </button>
             </>
           )}
-          <div className="album-lightbox-image">
-            <Image
-              key={activeImage.url}
-              className="album-stage-img"
-              src={imageSource(activeImage.url, 2000)}
-              alt={activeImage.alt}
-              fill
-              sizes="94vw"
-              unoptimized
-            />
-          </div>
+          {lightboxOpen && (
+            <div className="album-lightbox-image">
+              <Image
+                key={activeImage.url}
+                className="album-stage-img"
+                src={imageSource(activeImage.url, 2000)}
+                alt={activeImage.alt}
+                fill
+                sizes="94vw"
+                unoptimized
+              />
+            </div>
+          )}
           <div className="album-lightbox-footer">
             <span>
               {String(activeIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}

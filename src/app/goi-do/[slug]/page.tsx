@@ -2,7 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { BrandIcon } from "@/components/BrandIcon";
 import Link from "next/link";
 import { Breadcrumb, CTA } from "@/components/Sections";
-import { getManagedPackage, getManagedPackages, getPackageRedirect } from "@/lib/managed-content";
+import { getManagedPackage, getManagedPackages, getPackageRedirect, getRelatedPackages } from "@/lib/managed-content";
 import { getVehicleBadge } from "@/lib/vehicle-badge";
 import { pageMetadata, JsonLd } from "@/lib/seo";
 import { ArticleGallery } from "@/components/ArticleGallery";
@@ -10,7 +10,7 @@ import { VideoGallery } from "@/components/VideoGallery";
 import { RelatedPackages } from "@/components/RelatedPackages";
 import { PackageDetailActions } from "@/components/PackageDetailActions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return (await getManagedPackages()).map(({ slug }) => ({ slug }));
@@ -26,13 +26,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function PackagePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const allPackages = await getManagedPackages();
-  const item = allPackages.find((pkg) => pkg.slug === slug);
+  const item = await getManagedPackage(slug);
   if (!item) {
     const target = await getPackageRedirect(slug);
     if (target) permanentRedirect(target);
     notFound();
   }
+  const relatedPackages = await getRelatedPackages(item.slug, item.vehicle, 3);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const imageUrls = item.images.map((image) => image.url.startsWith("http") ? image.url : `${siteUrl}${image.url}`);
   return (
@@ -69,11 +69,7 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
           </aside>
         </div>
 
-        <RelatedPackages
-          currentSlug={item.slug}
-          currentVehicle={item.vehicle}
-          allPackages={allPackages}
-        />
+        <RelatedPackages packages={relatedPackages} />
 
         <nav className="related-links">
           <span>Có thể bạn quan tâm</span>

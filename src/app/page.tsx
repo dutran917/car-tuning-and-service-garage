@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { getHeroImage, getManagedArticles, getManagedPackages } from "@/lib/managed-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = pageMetadata(
   "Độ xe & nâng cấp VinFast VF3 theo phong cách riêng",

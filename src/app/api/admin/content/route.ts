@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAdmin, sameOrigin } from "@/lib/admin-auth";
 import { getPrisma } from "@/lib/prisma";
-import { seedManagedArticles, seedManagedPackages } from "@/lib/managed-content";
+import { seedManagedArticles, seedManagedPackages, invalidateManagedContentCache } from "@/lib/managed-content";
 
 export const runtime = "nodejs";
 
@@ -82,14 +83,23 @@ export async function PUT(request: Request) {
   if (typeof input.heroImage !== "undefined") {
     if (!safeImage(input.heroImage)) return NextResponse.json({ error: "Ảnh cần là URL HTTPS hoặc ảnh đã tải lên." }, { status: 400 });
     await prisma.siteSetting.upsert({ where: { key: "heroImage" }, update: { value: input.heroImage || "" }, create: { key: "heroImage", value: input.heroImage || "" } });
+    invalidateManagedContentCache();
+    revalidatePath("/");
     return NextResponse.json({ ok: true });
   }
   if (typeof input.deleteSlug === "string") {
     await prisma.managedPackage.delete({ where: { slug: input.deleteSlug } });
+    invalidateManagedContentCache();
+    revalidatePath("/");
+    revalidatePath("/goi-do");
+    revalidatePath(`/goi-do/${input.deleteSlug}`);
     return NextResponse.json({ ok: true });
   }
   if (typeof input.deleteArticleSlug === "string") {
     await prisma.managedArticle.delete({ where: { slug: input.deleteArticleSlug } });
+    invalidateManagedContentCache();
+    revalidatePath("/kien-thuc");
+    revalidatePath(`/kien-thuc/${input.deleteArticleSlug}`);
     return NextResponse.json({ ok: true });
   }
   if (typeof input.article !== "undefined") {
@@ -97,6 +107,9 @@ export async function PUT(request: Request) {
     if (!parsed) return NextResponse.json({ error: "Kiểm tra tiêu đề, slug, nội dung và thông tin ảnh của bài viết." }, { status: 400 });
     const { slug, ...data } = parsed;
     const saved = await prisma.managedArticle.upsert({ where: { slug }, update: data, create: { slug, ...data } });
+    invalidateManagedContentCache();
+    revalidatePath("/kien-thuc");
+    revalidatePath(`/kien-thuc/${saved.slug}`);
     return NextResponse.json({ ok: true, slug: saved.slug });
   }
   const parsed = parsePackage(input.package);
@@ -110,6 +123,10 @@ export async function PUT(request: Request) {
     if (slug !== originalSlug && await prisma.managedPackage.findUnique({ where: { slug }, select: { slug: true } })) return NextResponse.json({ error: "Slug này đã được dùng cho gói khác." }, { status: 409 });
     if (slug === originalSlug) {
       const saved = await prisma.managedPackage.update({ where: { slug }, data });
+      invalidateManagedContentCache();
+      revalidatePath("/");
+      revalidatePath("/goi-do");
+      revalidatePath(`/goi-do/${saved.slug}`);
       return NextResponse.json({ ok: true, slug: saved.slug });
     }
     await prisma.$transaction(async (transaction) => {
@@ -117,10 +134,19 @@ export async function PUT(request: Request) {
       await transaction.contentRedirect.updateMany({ where: { toPath: `/goi-do/${originalSlug}` }, data: { toPath: `/goi-do/${slug}` } });
       await transaction.contentRedirect.upsert({ where: { fromPath: `/goi-do/${originalSlug}` }, update: { toPath: `/goi-do/${slug}` }, create: { fromPath: `/goi-do/${originalSlug}`, toPath: `/goi-do/${slug}` } });
     });
+    invalidateManagedContentCache();
+    revalidatePath("/");
+    revalidatePath("/goi-do");
+    revalidatePath(`/goi-do/${originalSlug}`);
+    revalidatePath(`/goi-do/${slug}`);
     return NextResponse.json({ ok: true, slug, redirectFrom: originalSlug });
   }
   if (await prisma.managedPackage.findUnique({ where: { slug }, select: { slug: true } })) return NextResponse.json({ error: "Slug này đã tồn tại. Hãy chọn gói cần sửa trong danh sách." }, { status: 409 });
   const saved = await prisma.managedPackage.create({ data: { slug, ...data } });
+  invalidateManagedContentCache();
+  revalidatePath("/");
+  revalidatePath("/goi-do");
+  revalidatePath(`/goi-do/${saved.slug}`);
   return NextResponse.json({ ok: true, slug: saved.slug });
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error ? String(error.code) : "";

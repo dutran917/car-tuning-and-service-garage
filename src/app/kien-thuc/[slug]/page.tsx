@@ -8,7 +8,7 @@ import { getManagedArticle, getManagedArticles } from "@/lib/managed-content";
 import { ArticleGallery } from "@/components/ArticleGallery";
 import { VideoGallery } from "@/components/VideoGallery";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return [...articles.map(({ slug }) => ({ slug })), ...(await getManagedArticles()).map(({ slug }) => ({ slug }))].filter((item, index, array) => array.findIndex((entry) => entry.slug === item.slug) === index);

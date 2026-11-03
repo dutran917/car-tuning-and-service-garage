@@ -11,7 +11,45 @@ export function Hero({ imageUrl }: { imageUrl?: string | null }) { return <secti
 
 export function SectionHeading({ kicker, title, text, link, href }: { kicker: string; title: string; text?: string; link?: string; href?: string }) { return <div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-line"/>{kicker}</div><h2>{title}</h2>{text && <p>{text}</p>}</div>{link && href && <Link className="text-link heading-link" href={href}>{link} <BrandIcon name="arrow-up-right"/></Link>}</div>; }
 
-export function PackageCards({ compact = false, items = packages.map((item) => ({ ...item, images: [], imageUrl: null })) }: { compact?: boolean; items?: ManagedPackage[] }) { return <div className={`package-grid ${compact ? "package-grid-compact" : ""}`}>{items.map((item, index) => { const cover = item.imageUrl || item.images[0]?.url; return <Link href={`/goi-do/${item.slug}`} className="package-card" key={item.slug}><div className={`package-art package-art-${index + 1}`} style={cover ? { backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.72),rgba(13,15,14,.06)),url("${cover}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}><span>{item.style}</span><strong>{getVehicleBadge(item.vehicle)}<small> / {String(index + 1).padStart(2, "0")}</small></strong><span className="package-art-mark"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></span></div><div className="package-info"><div className="package-kicker">GỢI Ý CẤU HÌNH · {item.vehicle.toUpperCase()}</div><h3>{item.name}</h3><p className="package-excerpt">{packageExcerpt(item.text)}</p><div className="package-range">{item.range}<small> · tham khảo</small></div><span className="arrow-link">Xem cấu hình <BrandIcon name="arrow-up-right"/></span></div></Link>; })}</div>; }
+export function PackageCards({ compact = false, items = packages.map((item) => ({ ...item, images: [], imageUrl: null })) }: { compact?: boolean; items?: ManagedPackage[] }) {
+  return (
+    <div className={`package-grid ${compact ? "package-grid-compact" : ""}`}>
+      {items.map((item, index) => {
+        const cover = item.imageUrl || item.images[0]?.url;
+        return (
+          <Link href={`/goi-do/${item.slug}`} className="package-card" key={item.slug} prefetch={false}>
+            <div className={`package-art package-art-${index + 1}`}>
+              {cover && (
+                <>
+                  <Image
+                    src={cover}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                    loading="lazy"
+                    className="package-art-image"
+                    unoptimized
+                  />
+                  <div className="package-art-overlay" aria-hidden="true" />
+                </>
+              )}
+              <span>{item.style}</span>
+              <strong>{getVehicleBadge(item.vehicle)}<small> / {String(index + 1).padStart(2, "0")}</small></strong>
+              <span className="package-art-mark"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></span>
+            </div>
+            <div className="package-info">
+              <div className="package-kicker">GỢI Ý CẤU HÌNH · {item.vehicle.toUpperCase()}</div>
+              <h3>{item.name}</h3>
+              <p className="package-excerpt">{packageExcerpt(item.text)}</p>
+              <div className="package-range">{item.range}<small> · tham khảo</small></div>
+              <span className="arrow-link">Xem cấu hình <BrandIcon name="arrow-up-right"/></span>
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
 
 function articleCoverUrl(article: ManagedArticle) {
   return article.images.find((image) => image.isCover)?.url || article.images[0]?.url;
@@ -89,7 +127,7 @@ export function Process() { const steps = ["Tiếp nhận nhu cầu", "Tư vấn
 
 export function FAQ() { return <div className="faq-list">{faq.map((item, i) => <details key={item.q}><summary><span>0{i + 1}</span>{item.q}<b><BrandIcon name="plus"/></b></summary><p>{item.a}</p></details>)}</div>; }
 
-export function ArticleCards({ items = articles.map((article) => ({ ...article, images: [] })) }: { items?: ManagedArticle[] }) { return <div className="article-grid">{items.map((article) => { const cover = articleCoverUrl(article); return <Link href={`/kien-thuc/${article.slug}`} className="article-card" key={article.slug}><div className="article-cover" style={cover ? { backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.65),rgba(13,15,14,.05)),url("${cover}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}><span>{article.category}</span><b className="article-cover-logo"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></b></div><p className="article-date">{new Date(`${article.date}T00:00:00+07:00`).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}</p><h3>{article.title}</h3><p>{article.intro}</p><span className="arrow-link">Đọc bài viết <BrandIcon name="arrow-up-right"/></span></Link>; })}</div>; }
+export function ArticleCards({ items = articles.map((article) => ({ ...article, images: [] })) }: { items?: ManagedArticle[] }) { return <div className="article-grid">{items.map((article) => { const cover = articleCoverUrl(article); return <Link href={`/kien-thuc/${article.slug}`} className="article-card" key={article.slug} prefetch={false}><div className="article-cover" style={cover ? { backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.65),rgba(13,15,14,.05)),url("${cover}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}><span>{article.category}</span><b className="article-cover-logo"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></b></div><p className="article-date">{new Date(`${article.date}T00:00:00+07:00`).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}</p><h3>{article.title}</h3><p>{article.intro}</p><span className="arrow-link">Đọc bài viết <BrandIcon name="arrow-up-right"/></span></Link>; })}</div>; }
 
 export function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) { const entries = [{ label: "Trang chủ", href: "/" }, ...items]; return <><nav aria-label="Breadcrumb" className="breadcrumb"><Link href="/">Trang chủ</Link>{items.map((item, index) => <span key={`${item.label}-${index}`}> / {item.href ? <Link href={item.href}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}</span>)}</nav><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: entries.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.label, ...(item.href ? { item: `${site.url}${item.href}` } : {}) })) }).replace(/</g, "\\u003c") }} /></>; }
 

@@ -6,31 +6,35 @@ import { packageExcerpt } from "@/lib/package-excerpt";
 import { BrandIcon } from "@/components/BrandIcon";
 
 interface RelatedPackagesProps {
-  currentSlug: string;
-  currentVehicle: string;
-  allPackages: ManagedPackage[];
+  currentSlug?: string;
+  currentVehicle?: string;
+  allPackages?: ManagedPackage[];
+  packages?: ManagedPackage[];
 }
 
 export function RelatedPackages({
   currentSlug,
   currentVehicle,
   allPackages,
+  packages: precomputedPackages,
 }: RelatedPackagesProps) {
-  const others = allPackages.filter((p) => p.slug !== currentSlug);
-  if (!others.length) return null;
+  let related: ManagedPackage[] = [];
 
-  // Filter packages matching current vehicle
-  const normCurrent = (currentVehicle || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (precomputedPackages && precomputedPackages.length) {
+    related = precomputedPackages;
+  } else if (allPackages && currentSlug) {
+    const others = allPackages.filter((p) => p.slug !== currentSlug);
+    if (!others.length) return null;
 
-  const sameVehicle = others.filter((p) => {
-    const norm = (p.vehicle || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-    return norm && (norm === normCurrent || norm.includes(normCurrent) || normCurrent.includes(norm));
-  });
+    const normCurrent = (currentVehicle || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const sameVehicle = others.filter((p) => {
+      const norm = (p.vehicle || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      return norm && (norm === normCurrent || norm.includes(normCurrent) || normCurrent.includes(norm));
+    });
+    const differentVehicle = others.filter((p) => !sameVehicle.includes(p));
+    related = [...sameVehicle, ...differentVehicle].slice(0, 3);
+  }
 
-  const differentVehicle = others.filter((p) => !sameVehicle.includes(p));
-
-  // Pick 3 related packages: same vehicle first, then others
-  const related = [...sameVehicle, ...differentVehicle].slice(0, 3);
   if (!related.length) return null;
 
   return (
@@ -48,19 +52,27 @@ export function RelatedPackages({
         {related.map((pkg, index) => {
           const cover = pkg.imageUrl || pkg.images[0]?.url;
           return (
-            <Link href={`/goi-do/${pkg.slug}`} className="package-card" key={pkg.slug}>
-              <div
-                className={`package-art package-art-${(index % 3) + 1}`}
-                style={
-                  cover
-                    ? {
-                        backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.72),rgba(13,15,14,.06)),url("${cover}")`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }
-                    : undefined
-                }
-              >
+            <Link
+              href={`/goi-do/${pkg.slug}`}
+              className="package-card"
+              key={pkg.slug}
+              prefetch={false}
+            >
+              <div className={`package-art package-art-${(index % 3) + 1}`}>
+                {cover && (
+                  <>
+                    <Image
+                      src={cover}
+                      alt={pkg.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                      loading="lazy"
+                      className="package-art-image"
+                      unoptimized
+                    />
+                    <div className="package-art-overlay" aria-hidden="true" />
+                  </>
+                )}
                 <span>{pkg.style}</span>
                 <strong>
                   {getVehicleBadge(pkg.vehicle)}
@@ -95,7 +107,7 @@ export function RelatedPackages({
       </div>
 
       <div className="related-packages-cta">
-        <Link href="/goi-do" className="button button-outline">
+        <Link href="/goi-do" className="button button-outline" prefetch={false}>
           Xem tất cả cấu hình xe <BrandIcon name="arrow-right" />
         </Link>
       </div>

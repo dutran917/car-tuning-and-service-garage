@@ -46,19 +46,23 @@ export function PaginatedPackageCards({
               href={`/goi-do/${item.slug}`}
               className="package-card"
               key={item.slug}
+              prefetch={false}
             >
-              <div
-                className={`package-art package-art-${(index % 3) + 1}`}
-                style={
-                  cover
-                    ? {
-                        backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.72),rgba(13,15,14,.06)),url("${cover}")`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }
-                    : undefined
-                }
-              >
+              <div className={`package-art package-art-${(index % 3) + 1}`}>
+                {cover && (
+                  <>
+                    <Image
+                      src={cover}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                      loading="lazy"
+                      className="package-art-image"
+                      unoptimized
+                    />
+                    <div className="package-art-overlay" aria-hidden="true" />
+                  </>
+                )}
                 <span>{item.style}</span>
                 <strong>
                   {getVehicleBadge(item.vehicle)}
