@@ -14,6 +14,7 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const activeImage = images[activeIndex];
 
@@ -32,8 +33,16 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (lightboxOpen && !dialog.open) dialog.showModal();
-    if (!lightboxOpen && dialog.open) dialog.close();
+    if (lightboxOpen) {
+      if (!dialog.open) dialog.showModal();
+      document.body.style.overflow = "hidden";
+    } else {
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [lightboxOpen]);
 
   useEffect(() => {
@@ -184,9 +193,18 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
         onClose={() => setLightboxOpen(false)}
       >
         <div
+          ref={contentRef}
           className="album-lightbox-content"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
+          onClick={(event) => {
+            if (
+              event.target === contentRef.current ||
+              (event.target as HTMLElement).classList?.contains("album-lightbox-image")
+            ) {
+              setLightboxOpen(false);
+            }
+          }}
         >
           <button
             className="album-lightbox-close"
