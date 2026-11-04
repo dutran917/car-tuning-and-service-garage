@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { BrandIcon } from "@/components/BrandIcon";
 import type { ArticleImage } from "@/lib/managed-content";
 
 function imageSource(url: string, width: number) {
@@ -145,7 +146,7 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
               onClick={previous}
               aria-label="Ảnh trước"
             >
-              ‹
+              <BrandIcon name="chevron-left" />
             </button>
             <button
               type="button"
@@ -153,7 +154,7 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
               onClick={next}
               aria-label="Ảnh tiếp theo"
             >
-              ›
+              <BrandIcon name="chevron-right" />
             </button>
           </>
         )}
@@ -222,7 +223,7 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
                 onClick={previous}
                 aria-label="Ảnh trước"
               >
-                ‹
+                <BrandIcon name="chevron-left" />
               </button>
               <button
                 type="button"
@@ -230,7 +231,7 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
                 onClick={next}
                 aria-label="Ảnh tiếp theo"
               >
-                ›
+                <BrandIcon name="chevron-right" />
               </button>
             </>
           )}

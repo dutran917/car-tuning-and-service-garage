@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 type BrandIconName =
   | "arrow-up-right"
   | "arrow-right"
+  | "chevron-left"
+  | "chevron-right"
   | "menu"
   | "check"
   | "plus"
@@ -26,6 +28,8 @@ const paths: Record<BrandIconName, ReactNode> = {
       <path d="m13 6 6 6-6 6" />
     </>
   ),
+  "chevron-left": <path d="m15 18-6-6 6-6" />,
+  "chevron-right": <path d="m9 18 6-6-6-6" />,
   menu: (
     <>
       <path d="M4 7h16" />
