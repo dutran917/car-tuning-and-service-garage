@@ -29,7 +29,44 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: ["/og-image.jpg"],
   },
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico", sizes: "48x48" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   ...(process.env.NEXT_PUBLIC_SEARCH_CONSOLE_VERIFICATION ? { verification: { google: process.env.NEXT_PUBLIC_SEARCH_CONSOLE_VERIFICATION } } : {}),
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="vi"><body><a className="skip-link" href="#main-content">Chuyển đến nội dung</a><Header/><main id="main-content">{children}</main><Footer/><FloatingContact/><ConsentBanner/><Suspense fallback={null}><TrackingProvider/></Suspense></body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="vi">
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18532353935" />
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5QX78NCN" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-18532353935');`,
+          }}
+        />
+      </head>
+      <body>
+        <a className="skip-link" href="#main-content">Chuyển đến nội dung</a>
+        <Header />
+        <main id="main-content">{children}</main>
+        <Footer />
+        <FloatingContact />
+        <ConsentBanner />
+        <Suspense fallback={null}>
+          <TrackingProvider />
+        </Suspense>
+      </body>
+    </html>
+  );
+}
