@@ -7,9 +7,52 @@ import { packageExcerpt } from "@/lib/package-excerpt";
 import type { ManagedArticle } from "@/lib/managed-content";
 import { BrandIcon } from "@/components/BrandIcon";
 
-export function Hero({ imageUrl }: { imageUrl?: string | null }) { return <section className={`hero ${imageUrl ? "hero-has-image" : ""}`}><div className="hero-art" aria-hidden="true" style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}><div className="hero-orbit orbit-one"/><div className="hero-orbit orbit-two"/><div className="hero-light"/><div className="hero-car"><div className="car-roof"/><div className="car-window"/><div className="car-body"/><div className="car-wheel wheel-a"/><div className="car-wheel wheel-b"/><div className="car-light"/></div><div className="art-caption"><span>VF3 / PERSONAL BUILD</span><span>{imageUrl ? "QUỐC DƯƠNG AUTO" : "CONCEPT IMAGE · NOT A CUSTOMER PROJECT"}</span></div></div><div className="container hero-content"><div className="eyebrow"><span className="eyebrow-line"/>CAR TUNING, THE PERSONAL WAY</div><h1>Không chỉ nâng cấp xe.<br/><span>Định hình chất riêng.</span></h1><p className="hero-description">Tư vấn concept, lựa chọn phụ kiện và thi công theo cách bạn muốn sử dụng chiếc xe — bắt đầu từ VinFast VF3.</p><div className="hero-actions"><Link className="button" href="/du-an">Khám phá các bản độ <BrandIcon name="arrow-up-right"/></Link><Link className="text-link" href="/tu-van">Tư vấn cấu hình <BrandIcon name="arrow-right"/></Link></div><div className="hero-index"><span>01 / 04</span><span>ĐỘ XE THEO CÁCH CỦA BẠN</span></div></div><div className="hero-side-label">QUỐC DƯƠNG AUTO — CAR TUNING & SERVICE</div></section>; }
+export function Hero({ imageUrl }: { imageUrl?: string | null }) {
+  return (
+    <section className={`hero ${imageUrl ? "hero-has-image" : ""}`}>
+      <div className="hero-art" aria-hidden="true" style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}>
+        <div className="hero-orbit orbit-one"/>
+        <div className="hero-orbit orbit-two"/>
+        <div className="hero-light"/>
+        <div className="hero-car">
+          <div className="car-roof"/>
+          <div className="car-window"/>
+          <div className="car-body"/>
+          <div className="car-wheel wheel-a"/>
+          <div className="car-wheel wheel-b"/>
+          <div className="car-light"/>
+        </div>
+        <div className="art-caption">
+          <span>VF3 / BẢN ĐỘ CHUYÊN NGHIỆP</span>
+          <span>QUỐC DƯƠNG AUTO</span>
+        </div>
+      </div>
+      <div className="container hero-content">
+        <div className="eyebrow"><span className="eyebrow-line"/>XƯỞNG ĐỘ XE QUỐC DƯƠNG AUTO · CẨM PHẢ, QUẢNG NINH</div>
+        <h1>Nâng cấp &amp; Độ xe VinFast VF3.<br/><span>Đẳng cấp, độc bản &amp; chuẩn kỹ thuật.</span></h1>
+        <p className="hero-description">Chuyên độ Bodykit G63/Brabus, bọc ghế da Nappa cao cấp, độ đèn Bi-LED siêu sáng, mâm lốp thể thao và màn hình Android thông minh cho VF3. Báo giá trọn gói minh bạch, thi công tỉ mỉ, bảo hành dài hạn.</p>
+        <div className="hero-actions">
+          <Link className="button" href="/goi-do">Xem các gói độ VF3</Link>
+          <a
+            className="button button-zalo-hero"
+            href={site.zalo}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span className="zalo-icon-wrap">
+              <BrandIcon name="zalo" />
+            </span>
+            Nhắn Zalo tư vấn 24/7
+          </a>
+        </div>
+        <div className="hero-index"><span>01 / 04</span><span>ĐỘ XE VINFAST VF3 THEO GU RIÊNG</span></div>
+      </div>
+      <div className="hero-side-label">QUỐC DƯƠNG AUTO — CAR TUNING &amp; SERVICE</div>
+    </section>
+  );
+}
 
-export function SectionHeading({ kicker, title, text, link, href }: { kicker: string; title: string; text?: string; link?: string; href?: string }) { return <div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-line"/>{kicker}</div><h2>{title}</h2>{text && <p>{text}</p>}</div>{link && href && <Link className="text-link heading-link" href={href}>{link} <BrandIcon name="arrow-up-right"/></Link>}</div>; }
+export function SectionHeading({ kicker, title, text, link, href }: { kicker: string; title: string; text?: string; link?: string; href?: string }) { return <div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-line"/>{kicker}</div><h2>{title}</h2>{text && <p>{text}</p>}</div>{link && href && <Link className="text-link heading-link" href={href}>{link}</Link>}</div>; }
 
 export function PackageCards({ compact = false, items = packages.map((item) => ({ ...item, images: [], imageUrl: null })) }: { compact?: boolean; items?: ManagedPackage[] }) {
   return (
@@ -42,7 +85,7 @@ export function PackageCards({ compact = false, items = packages.map((item) => (
               <h3>{item.name}</h3>
               <p className="package-excerpt">{packageExcerpt(item.text)}</p>
               <div className="package-range">{item.range}<small> · tham khảo</small></div>
-              <span className="arrow-link">Xem cấu hình <BrandIcon name="arrow-up-right"/></span>
+              <span className="arrow-link">Xem cấu hình</span>
             </div>
           </Link>
         );
@@ -55,7 +98,40 @@ function articleCoverUrl(article: ManagedArticle) {
   return article.images.find((image) => image.isCover)?.url || article.images[0]?.url;
 }
 
-export function ServiceCards() { return <div className="service-grid">{services.map((item) => <Link href={`/dich-vu/${item.slug}`} className="service-card" key={item.slug}><span className="service-number">{item.icon} <span>WHAT WE DO</span></span><h3>{item.title}</h3><p>{item.short}</p><span className="service-arrow" aria-label={`Tìm hiểu ${item.title}`}><BrandIcon name="arrow-up-right"/></span></Link>)}</div>; }
+export function ServiceCards() {
+  return (
+    <div className="service-grid">
+      {services.map((item) => (
+        <Link href={`/dich-vu/${item.slug}`} className="service-card" key={item.slug}>
+          {item.image && (
+            <div className="service-card-art">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                className="service-card-image"
+                unoptimized
+              />
+              <div className="service-card-overlay" />
+              <span className="service-number">{item.icon} <span>WHAT WE DO</span></span>
+            </div>
+          )}
+          <div className="service-card-body">
+            {!item.image && (
+              <span className="service-number">{item.icon} <span>WHAT WE DO</span></span>
+            )}
+            <h3>{item.title}</h3>
+            <p>{item.short}</p>
+            <span className="arrow-link">
+              Khám phá dịch vụ <BrandIcon name="arrow-up-right" />
+            </span>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function ProjectGallery() {
   const featuredProjects = [
@@ -110,9 +186,6 @@ export function ProjectGallery() {
               <span>{project.car}</span>
               <h3>{project.subtitle}</h3>
             </div>
-            <span className="project-meta-arrow" aria-label={`Xem chi tiết ${project.title}`}>
-              <BrandIcon name="arrow-up-right" />
-            </span>
           </div>
         </Link>
       ))}
@@ -127,10 +200,10 @@ export function Process() { const steps = ["Tiếp nhận nhu cầu", "Tư vấn
 
 export function FAQ() { return <div className="faq-list">{faq.map((item, i) => <details key={item.q}><summary><span>0{i + 1}</span>{item.q}<b><BrandIcon name="plus"/></b></summary><p>{item.a}</p></details>)}</div>; }
 
-export function ArticleCards({ items = articles.map((article) => ({ ...article, images: [] })) }: { items?: ManagedArticle[] }) { return <div className="article-grid">{items.map((article) => { const cover = articleCoverUrl(article); return <Link href={`/kien-thuc/${article.slug}`} className="article-card" key={article.slug} prefetch={false}><div className="article-cover" style={cover ? { backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.65),rgba(13,15,14,.05)),url("${cover}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}><span>{article.category}</span><b className="article-cover-logo"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></b></div><p className="article-date">{new Date(`${article.date}T00:00:00+07:00`).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}</p><h3>{article.title}</h3><p>{article.intro}</p><span className="arrow-link">Đọc bài viết <BrandIcon name="arrow-up-right"/></span></Link>; })}</div>; }
+export function ArticleCards({ items = articles.map((article) => ({ ...article, images: [] })) }: { items?: ManagedArticle[] }) { return <div className="article-grid">{items.map((article) => { const cover = articleCoverUrl(article); return <Link href={`/kien-thuc/${article.slug}`} className="article-card" key={article.slug} prefetch={false}><div className="article-cover" style={cover ? { backgroundImage: `linear-gradient(0deg,rgba(13,15,14,.65),rgba(13,15,14,.05)),url("${cover}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}><span>{article.category}</span><b className="article-cover-logo"><Image src="/logo-quoc-duong-auto-transparent.png" alt="Quốc Dương Auto" width={352} height={157}/></b></div><p className="article-date">{new Date(`${article.date}T00:00:00+07:00`).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}</p><h3>{article.title}</h3><p>{article.intro}</p><span className="arrow-link">Đọc bài viết</span></Link>; })}</div>; }
 
 export function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) { const entries = [{ label: "Trang chủ", href: "/" }, ...items]; return <><nav aria-label="Breadcrumb" className="breadcrumb"><Link href="/">Trang chủ</Link>{items.map((item, index) => <span key={`${item.label}-${index}`}> / {item.href ? <Link href={item.href}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}</span>)}</nav><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: entries.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.label, ...(item.href ? { item: `${site.url}${item.href}` } : {}) })) }).replace(/</g, "\\u003c") }} /></>; }
 
-export function CTA() { return <section className="cta-band"><div className="container cta-inner"><div><div className="eyebrow"><span className="eyebrow-line"/>START WITH A CONVERSATION</div><h2>Chiếc xe tiếp theo<br/>của bạn bắt đầu từ đây.</h2><p>Chia sẻ điều bạn muốn thay đổi. Cùng bắt đầu từ một cấu hình phù hợp.</p></div><Link className="button" href="/tu-van">Bắt đầu tư vấn <BrandIcon name="arrow-up-right"/></Link></div></section>; }
+export function CTA() { return <section className="cta-band"><div className="container cta-inner"><div><div className="eyebrow"><span className="eyebrow-line"/>START WITH A CONVERSATION</div><h2>Chiếc xe tiếp theo<br/>của bạn bắt đầu từ đây.</h2><p>Chia sẻ điều bạn muốn thay đổi. Cùng bắt đầu từ một cấu hình phù hợp.</p></div><Link className="button" href="/tu-van">Bắt đầu tư vấn</Link></div></section>; }
 
 export function ServiceJson({ name, description, path }: { name: string; description: string; path: string }) { return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "Service", name, description, provider: { "@type": "Organization", name: site.name, url: site.url }, url: `${site.url}${path}` }).replace(/</g, "\\u003c") }} />; }
