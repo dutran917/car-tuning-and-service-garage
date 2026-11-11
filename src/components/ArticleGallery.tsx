@@ -56,11 +56,24 @@ export function ArticleGallery({ images }: { images: ArticleImage[] }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [images.length, lightboxOpen, next, previous]);
 
-  // Keep active thumbnail centered and visible
+  const isInitialMount = useRef(true);
+
+  // Keep active thumbnail centered and visible without scrolling the whole page
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const thumb = thumbRefs.current[activeIndex];
-    if (thumb) {
-      thumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    if (thumb && thumb.parentElement) {
+      const container = thumb.parentElement;
+      const thumbLeft = thumb.offsetLeft;
+      const thumbWidth = thumb.offsetWidth;
+      const containerWidth = container.offsetWidth;
+      container.scrollTo({
+        left: thumbLeft - containerWidth / 2 + thumbWidth / 2,
+        behavior: "smooth",
+      });
     }
   }, [activeIndex]);
 
