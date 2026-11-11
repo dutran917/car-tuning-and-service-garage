@@ -4,6 +4,7 @@ export const site = {
   tagline: "Biến chiếc xe nguyên bản thành chiếc xe của riêng bạn.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   facebook: "https://www.facebook.com/profile.php?id=100063240608455",
+  messenger: "https://m.me/108880947180099",
   phone: "0399513456",
   phoneDisplay: "0399.513.456",
   zalo: "https://zalo.me/0399513456",
@@ -11,13 +12,64 @@ export const site = {
   address: "Cẩm Phả, Quảng Ninh",
 };
 
-export const services = [
-  { slug: "noi-that", title: "Nội thất cá nhân hóa (Bespoke)", short: "Ghế da Nappa cao cấp, vô-lăng Carbon, trần sao và những điểm chạm chuẩn gu riêng.", icon: "01", detail: "Nâng cấp khoang lái theo tiêu chuẩn tinh xảo: da Nappa cao cấp kháng khuẩn, tạo phom ghế thể thao ôm lưng, bọc vô-lăng Carbon sợi, tích hợp làm mát ghế và đèn Ambient Light đa sắc đồng bộ." },
-  { slug: "ngoai-that-body-kit", title: "Ngoại thất & Body Kit thể thao", short: "Kiến tạo diện mạo uy lực, khí động học với bodykit Brabus, G63, cản trước sau và đuôi gió thể thao.", icon: "02", detail: "Cung cấp và lắp đặt bodykit chính xác từng milimet cho VinFast VF3 và các dòng SUV. Chất liệu nhựa PP/ABS cao cấp sơn sấy nhiệt độ tiêu chuẩn, giữ nguyên kết cấu khung gầm và an toàn vận hành." },
-  { slug: "mam-lop", title: "Mâm đúc & Lốp Performance", short: "Đa dạng kiểu dáng mâm đúc thể thao 16–18 inch, cân mâm bấm chì và căn chỉnh độ chụm chuẩn xác.", icon: "03", detail: "Tư vấn chuẩn thông số offset (ET), PCD và kích thước lốp tối ưu cho từng cung đường. Tăng cường độ bám đường, êm ái khi di chuyển và tôn trọn vóc dáng khỏe khoắn của xế cưng." },
-  { slug: "anh-sang-tien-nghi", title: "Ánh sáng & Tiện nghi công nghệ", short: "Nâng cấp Bi-LED laser siêu sáng, dải LED định vị ma trận, màn hình thông minh và âm thanh vòm.", icon: "04", detail: "Giải pháp chiếu sáng an toàn không gây chói mắt xe đối diện, cắm giắc zin 100% không cắt trích dây điện. Tích hợp màn hình Android, camera 360 toàn cảnh sắc nét và dàn loa nâng cấp âm trường sống động." },
-  { slug: "cach-am-phu-kien", title: "Cách âm chống ồn & Phụ kiện", short: "Triệt tiêu rung ồn gầm, tiếng gió bằng vật liệu cách âm đa lớp cao cấp; cửa hít và cốp điện êm ái.", icon: "05", detail: "Dán cách âm 3 lớp chuyên dụng không mùi, tiêu âm khoang động cơ, 4 hốc bánh và sàn xe. Kết hợp phụ kiện nâng cấp thiết thực: cửa hít thông minh, cốp điện đóng mở tự động và film cách nhiệt cao cấp." },
-  { slug: "tu-van-concept", title: "Thiết kế Concept bản độ riêng", short: "Hiện thực hóa ý tưởng từ phối màu, lựa chọn đồ chơi đến hoàn thiện tổng thể theo cá tính của bạn.", icon: "06", detail: "Đồng hành cùng chủ xe từ giai đoạn lên ý tưởng 3D, lựa chọn bài độ tối ưu trong ngân sách, đến lộ trình thi công bài bản và nghiệm thu bàn giao chuyên nghiệp." },
+export interface ServiceItem {
+  slug: string;
+  title: string;
+  short: string;
+  icon: string;
+  detail: string;
+  image?: string;
+}
+
+export const services: ServiceItem[] = [
+  {
+    slug: "noi-that",
+    title: "Nội thất cá nhân hóa (Bespoke)",
+    short: "Ghế da Nappa cao cấp, vô-lăng Carbon, trần sao và những điểm chạm chuẩn gu riêng.",
+    icon: "01",
+    image: "/uploads/quocduong-auto-vf3-nang-cap-full-noi-ngoai-that-cho-a-zai-bac-ninh-2-d020ac.webp",
+    detail: "Nâng cấp khoang lái theo tiêu chuẩn tinh xảo: da Nappa cao cấp kháng khuẩn, tạo phom ghế thể thao ôm lưng, bọc vô-lăng Carbon sợi, tích hợp làm mát ghế và đèn Ambient Light đa sắc đồng bộ."
+  },
+  {
+    slug: "ngoai-that-body-kit",
+    title: "Ngoại thất & Body Kit thể thao",
+    short: "Kiến tạo diện mạo uy lực, khí động học với bodykit Brabus, G63, cản trước sau và đuôi gió thể thao.",
+    icon: "02",
+    image: "/uploads/quocduong-auto-goi-nang-cap-style-brabus-tri-gia-17x-moi-ae-tham-khao-1-09d8f2.webp",
+    detail: "Cung cấp và lắp đặt bodykit chính xác từng milimet cho VinFast VF3 và các dòng SUV. Chất liệu nhựa PP/ABS cao cấp sơn sấy nhiệt độ tiêu chuẩn, giữ nguyên kết cấu khung gầm và an toàn vận hành."
+  },
+  {
+    slug: "mam-lop",
+    title: "Mâm đúc & Lốp Performance",
+    short: "Đa dạng kiểu dáng mâm đúc thể thao 16–18 inch, cân mâm bấm chì và căn chỉnh độ chụm chuẩn xác.",
+    icon: "03",
+    image: "/uploads/quocduong-auto-san-hang-mam-crom-16inch-1-5de4c8.webp",
+    detail: "Tư vấn chuẩn thông số offset (ET), PCD và kích thước lốp tối ưu cho từng cung đường. Tăng cường độ bám đường, êm ái khi di chuyển và tôn trọn vóc dáng khỏe khoắn của xế cưng."
+  },
+  {
+    slug: "anh-sang-tien-nghi",
+    title: "Ánh sáng & Tiện nghi công nghệ",
+    short: "Nâng cấp Bi-LED laser siêu sáng, dải LED định vị ma trận, màn hình thông minh và âm thanh vòm.",
+    icon: "04",
+    image: "/uploads/quocduong-auto-vf3-full-bai-do-cho-chiec-vf3-moi-ae-tham-khao-1-6960f3.webp",
+    detail: "Giải pháp chiếu sáng an toàn không gây chói mắt xe đối diện, cắm giắc zin 100% không cắt trích dây điện. Tích hợp màn hình Android, camera 360 toàn cảnh sắc nét và dàn loa nâng cấp âm trường sống động."
+  },
+  {
+    slug: "cach-am-phu-kien",
+    title: "Cách âm chống ồn & Phụ kiện",
+    short: "Triệt tiêu rung ồn gầm, tiếng gió bằng vật liệu cách âm đa lớp cao cấp; cửa hít và cốp điện êm ái.",
+    icon: "05",
+    image: "/uploads/quocduong-auto-vf3-gom-day-du-tat-ca-cac-mon-do-choi-can-thiet-cho-su-dung-hang-ngay-va-ta-cover-de721e.webp",
+    detail: "Dán cách âm 3 lớp chuyên dụng không mùi, tiêu âm khoang động cơ, 4 hốc bánh và sàn xe. Kết hợp phụ kiện nâng cấp thiết thực: cửa hít thông minh, cốp điện đóng mở tự động và film cách nhiệt cao cấp."
+  },
+  {
+    slug: "tu-van-concept",
+    title: "Thiết kế Concept bản độ riêng",
+    short: "Hiện thực hóa ý tưởng từ phối màu, lựa chọn đồ chơi đến hoàn thiện tổng thể theo cá tính của bạn.",
+    icon: "06",
+    image: "/uploads/quocduong-auto-chiec-thu-3-tai-vn-len-full-style-brabus-cover-67ad34.webp",
+    detail: "Đồng hành cùng chủ xe từ giai đoạn lên ý tưởng 3D, lựa chọn bài độ tối ưu trong ngân sách, đến lộ trình thi công bài bản và nghiệm thu bàn giao chuyên nghiệp."
+  },
 ];
 
 export const packages = [

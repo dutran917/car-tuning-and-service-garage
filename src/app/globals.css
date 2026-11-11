@@ -544,13 +544,31 @@ html, body {
   height: 16px;
 }
 
+.dock-action-messenger .dock-icon {
+  color: #0084ff;
+}
+
+.dock-action-messenger:hover {
+  background: rgba(0, 132, 255, 0.12);
+  color: #ffffff !important;
+}
+
+.dock-action-messenger:hover .dock-icon {
+  color: #3897f0;
+  transform: scale(1.1);
+}
+
+.dock-action-zalo .dock-icon {
+  color: #0068ff;
+}
+
 .dock-action-zalo:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff !important;
 }
 
 .dock-action-zalo:hover .dock-icon {
-  color: var(--orange);
+  color: #3388ff;
   transform: scale(1.1);
 }
 
@@ -581,17 +599,17 @@ html, body {
 
 @media(max-width: 740px) {
   .floating-dock {
-    right: 14px;
-    bottom: 18px;
+    right: 10px;
+    bottom: 16px;
   }
   .floating-dock-action {
-    padding: 7px 11px;
+    padding: 6px 9px;
     font-size: 11px;
-    gap: 6px;
+    gap: 5px;
   }
   .dock-icon {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
   }
   .dock-icon svg {
     width: 14px;
