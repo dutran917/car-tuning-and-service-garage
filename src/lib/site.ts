@@ -23,6 +23,14 @@ export interface ServiceItem {
 
 export const services: ServiceItem[] = [
   {
+    slug: "mua-xe-do-custom-tron-goi",
+    title: "Mua xe mới & Độ Custom trọn gói (Chìa khóa trao tay)",
+    short: "Hỗ trợ mua xe VinFast mới từ đại lý chính hãng, độ theo gu riêng và bàn giao xe hoàn thiện tận tay.",
+    icon: "00",
+    image: "/uploads/0d818fca-8343-4c27-b4af-e54fe251da0c.webp",
+    detail: "Giải pháp trọn gói hoàn hảo cho khách hàng muốn sở hữu chiếc xe độc bản ngay từ ngày đầu tiên lăn bánh. Quốc Dương Auto liên kết trực tiếp các đại lý VinFast chính hãng: hỗ trợ xuất xe với chính sách đại lý tốt nhất, tư vấn thiết kế concept riêng (G63, Brabus, Thể thao...), thi công hoàn thiện mâm lốp, nội thất da Nappa, bodykit, tiện nghi và bàn giao chìa khóa trao tay tận nhà mà khách hàng không phải mất thời gian chờ đợi hay tự chạy đi làm từng công đoạn."
+  },
+  {
     slug: "noi-that",
     title: "Nội thất cá nhân hóa (Bespoke)",
     short: "Ghế da Nappa cao cấp, vô-lăng Carbon, trần sao và những điểm chạm chuẩn gu riêng.",
