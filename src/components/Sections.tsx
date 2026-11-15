@@ -32,7 +32,7 @@ export function Hero({ imageUrl }: { imageUrl?: string | null }) {
         <h1>Nâng cấp &amp; Độ xe VinFast VF3.<br/><span>Đẳng cấp, độc bản &amp; chuẩn kỹ thuật.</span></h1>
         <p className="hero-description">Chuyên độ Bodykit G63/Brabus, bọc ghế da Nappa cao cấp, độ đèn Bi-LED siêu sáng, mâm lốp thể thao và màn hình Android thông minh cho VF3. Báo giá trọn gói minh bạch, thi công tỉ mỉ, bảo hành dài hạn.</p>
         <div className="hero-actions">
-          <Link className="button" href="/goi-do">Xem các gói độ VF3</Link>
+          <Link className="button button-hero-primary" href="/goi-do">Xem các gói độ VF3</Link>
           <a
             className="button button-zalo-hero"
             href={site.zalo}
@@ -42,7 +42,7 @@ export function Hero({ imageUrl }: { imageUrl?: string | null }) {
             <span className="zalo-icon-wrap">
               <BrandIcon name="zalo" />
             </span>
-            Nhắn Zalo tư vấn 24/7
+            <span>Nhắn Zalo tư vấn 24/7</span>
           </a>
         </div>
         <div className="hero-index"><span>01 / 04</span><span>ĐỘ XE VINFAST VF3 THEO GU RIÊNG</span></div>
@@ -71,6 +71,7 @@ export function PackageCards({ compact = false, items = packages.map((item) => (
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                     loading="lazy"
                     className="package-art-image"
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                     unoptimized
                   />
                   <div className="package-art-overlay" aria-hidden="true" />
@@ -111,6 +112,7 @@ export function ServiceCards() {
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                 className="service-card-image"
+                style={{ objectFit: "cover", objectPosition: "center" }}
                 unoptimized
               />
               <div className="service-card-overlay" />

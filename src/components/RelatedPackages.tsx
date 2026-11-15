@@ -68,6 +68,7 @@ export function RelatedPackages({
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                       loading="lazy"
                       className="package-art-image"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
                       unoptimized
                     />
                     <div className="package-art-overlay" aria-hidden="true" />
@@ -98,7 +99,7 @@ export function RelatedPackages({
                   <small> · tham khảo</small>
                 </div>
                 <span className="arrow-link">
-                  Xem cấu hình <BrandIcon name="arrow-up-right" />
+                  Xem cấu hình
                 </span>
               </div>
             </Link>
@@ -108,7 +109,7 @@ export function RelatedPackages({
 
       <div className="related-packages-cta">
         <Link href="/goi-do" className="button button-outline" prefetch={false}>
-          Xem tất cả cấu hình xe <BrandIcon name="arrow-right" />
+          Xem tất cả cấu hình xe
         </Link>
       </div>
     </section>

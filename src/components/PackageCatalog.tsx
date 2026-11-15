@@ -98,6 +98,7 @@ export function PackageCatalog({ packages }: { packages: ManagedPackage[] }) {
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                           loading="lazy"
                           className="package-art-image"
+                          style={{ objectFit: "cover", objectPosition: "center" }}
                           unoptimized
                         />
                         <div className="package-art-overlay" aria-hidden="true" />
@@ -128,7 +129,7 @@ export function PackageCatalog({ packages }: { packages: ManagedPackage[] }) {
                       <small> · tham khảo</small>
                     </div>
                     <span className="arrow-link">
-                      Xem cấu hình <BrandIcon name="arrow-up-right" />
+                      Xem cấu hình
                     </span>
                   </div>
                 </Link>
@@ -143,7 +144,7 @@ export function PackageCatalog({ packages }: { packages: ManagedPackage[] }) {
                 className="button button-outline"
                 onClick={() => setVisibleCount((prev) => prev + INITIAL_PAGE_SIZE)}
               >
-                Xem thêm {Math.min(remaining, INITIAL_PAGE_SIZE)} cấu hình khác (còn {remaining} gói) <BrandIcon name="arrow-right" />
+                Xem thêm {Math.min(remaining, INITIAL_PAGE_SIZE)} cấu hình khác (còn {remaining} gói)
               </button>
             </div>
           )}
@@ -153,7 +154,7 @@ export function PackageCatalog({ packages }: { packages: ManagedPackage[] }) {
           <strong>Chưa có gợi ý phù hợp.</strong>
           <p>Thử thay đổi bộ lọc hoặc gửi nhu cầu để được tư vấn cấu hình riêng.</p>
           <Link href="/tu-van">
-            Tư vấn cấu hình <BrandIcon name="arrow-up-right" />
+            Tư vấn cấu hình
           </Link>
         </div>
       )}

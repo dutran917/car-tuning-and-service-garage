@@ -58,6 +58,7 @@ export function PaginatedPackageCards({
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                       loading="lazy"
                       className="package-art-image"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
                       unoptimized
                     />
                     <div className="package-art-overlay" aria-hidden="true" />
