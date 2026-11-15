@@ -9,6 +9,7 @@ import { ArticleGallery } from "@/components/ArticleGallery";
 import { VideoGallery } from "@/components/VideoGallery";
 import { RelatedPackages } from "@/components/RelatedPackages";
 import { PackageDetailActions } from "@/components/PackageDetailActions";
+import { site } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -47,6 +48,66 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
             <VideoGallery videos={item.videos ?? []} />
             <p className="detail-lead">{item.text}</p>
             <div className="detail-disclosure">{item.range}. Đây là ngân sách tham khảo, không phải giá cố định. Báo giá cuối cùng được xác nhận sau khi thống nhất phiên bản xe, vật tư và phạm vi thi công.</div>
+
+            <div style={{
+              margin: "24px 0",
+              padding: "20px",
+              background: "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "14px",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.3)"
+            }}>
+              <div style={{ fontWeight: 700, fontSize: "17px", marginBottom: "8px", color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span>⚡️ Báo giá nhanh &amp; Hỗ trợ toàn quốc</span>
+              </div>
+              <ul style={{ margin: "0 0 16px 0", paddingLeft: "20px", fontSize: "14px", color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>
+                <li>Hỗ trợ <strong>ship COD toàn quốc</strong>, kiểm tra hàng trước khi thanh toán</li>
+                <li>Hướng dẫn kỹ thuật lắp ráp qua video call 1-1</li>
+                <li>Thi công trực tiếp tại xưởng Cẩm Phả: chuẩn form zin, không cắt trích dây</li>
+              </ul>
+              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                <a
+                  href={site.zalo}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    flex: "1 1 200px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "12px 16px",
+                    background: "#0068ff",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    textDecoration: "none"
+                  }}
+                >
+                  <BrandIcon name="zalo" />
+                  <span>Chat Zalo: 0399.513.456</span>
+                </a>
+                <a
+                  href={`tel:${site.phone}`}
+                  style={{
+                    flex: "1 1 160px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "12px 16px",
+                    background: "linear-gradient(135deg, #e65100, #ff6d00)",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    textDecoration: "none"
+                  }}
+                >
+                  <BrandIcon name="phone" />
+                  <span>Gọi Hotline</span>
+                </a>
+              </div>
+            </div>
             <h2>Gợi ý nội dung trao đổi</h2>
             <ul className="detail-list">{item.items.map((row, index) => <li key={`${item.slug}-item-${index}`}>{row}</li>)}</ul>
             <h2>Trước khi xác nhận</h2>
